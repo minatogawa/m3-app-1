@@ -1,26 +1,18 @@
 import anvil.server
 import bibtexparser
+import io
 
 @anvil.server.callable
 def testar_conexao():
   return "Conexão bem-sucedida!"
 
 @anvil.server.callable
-def processar_bibtex(arquivo):
-  print("Iniciando processamento do arquivo BibTeX...")
-  with anvil.media.TempFile(arquivo) as filename:
-    with open(filename, 'r') as file:
-      conteudo = file.read()
-      # Aqui você pode processar o conteúdo do arquivo BibTeX
-      try:
-        bib_database = bibtexparser.parse_string(conteudo)
-        print(bib_database)
-        # Aqui, você pode extrair informações adicionais se necessário
-        return f"Arquivo com {len(bib_database.entries)} entradas processado com sucesso!"
-      except Exception as e:
-        return f"Erro ao processar arquivo: {e}"
-      return "Arquivo processado com sucesso!"
-
-@anvil.server.callable
-def obter_texto():
-    return "Texto fornecido pelo backend."
+def processar_bibtex(blob_media):
+    # Lê o arquivo como uma string
+    bibtex_str = blob_media.get_bytes().decode()
+    # Usa bibtexparser.parse_string para processar a string BibTeX
+    bibtex_database = bibtexparser.parse_string(bibtex_str)
+    print(bibtex_database)
+    # Processamento adicional conforme necessário...
+    # Por exemplo, extrair informações específicas do BibTeX
+    return str(bibtex_database.entries)  # Retorna uma representação string das entradas

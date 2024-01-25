@@ -17,19 +17,16 @@ components:
     properties: {file_types: '[".bib"]'}
     type: FileLoader
     layout_properties: {grid_position: 'PDXLQB,MSDTOK'}
-  - name: label_resultado
-    properties: {visible: true}
-    type: Label
-    layout_properties: {grid_position: 'BDZGNS,EBQCQI'}
-  - name: button_2
-    properties: {text: button_2}
+    event_bindings: {change: file_loader_1_change}
+  - name: my_button
+    properties: {text: my_button, enabled: true, visible: false}
     type: Button
-    layout_properties: {grid_position: 'WPMFRT,CSTHXP'}
-    event_bindings: {click: button_2_click}
-  - name: label_1
+    layout_properties: {grid_position: 'MUYSTY,ZUPKFC'}
+    event_bindings: {click: my_button_click}
+  - name: label_resultado
     properties: {}
     type: Label
-    layout_properties: {grid_position: 'AXCVTQ,EHMSZS'}
+    layout_properties: {grid_position: 'EHPJQV,ILSSRG'}
 - type: FlowPanel
   properties: {}
   name: navbar_links

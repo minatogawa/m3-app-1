@@ -15,18 +15,25 @@ class Form1(Form1Template):
     print(resposta)
 
   def file_loader_1_change(self, file, **event_args):
-    if self.file_loader_1.file:
-      arquivo = self.file_loader_1.file
-      print("Arquivo selecionado, enviando para processamento...")
-      anvil.server.call_async('processar_bibtex', arquivo, self.processar_resposta)
+    self.loaded_file = file
+    self.my_button.visible = True
+
+  # No evento de clique do botão (para uso futuro)
+  def my_button_click(self, **event_args):
+    print("oi")
+    if self.loaded_file:
+      # Cria um objeto BlobMedia a partir do arquivo carregado
+      blob = anvil.BlobMedia(content_type=self.loaded_file.content_type,
+                              content=self.loaded_file.get_bytes(),
+                              name=self.loaded_file.name)
+      
+      # Chama a função no servidor e passa o BlobMedia
+      processed_data = anvil.server.call('processar_bibtex', blob)
+      
+      # Exibe os dados processados
+      self.label_resultado.text = processed_data
     else:
-      anvil.alert("Por favor, selecione um arquivo .bib")
+      print("Nenhum arquivo carregado")
 
-  def processar_resposta(self, resposta):
-    print(f"Resposta recebida: {resposta}")
-    self.label_resultado.text = resposta
 
-  def button_2_click(self, **event_args):
-    # Chamada para a função do backend
-    texto_do_backend = anvil.server.call('obter_texto')
-    self.label_1.text = texto_do_backend
+
