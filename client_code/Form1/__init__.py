@@ -25,3 +25,8 @@ class Form1(Form1Template):
   def processar_resposta(self, resposta):
     print(f"Resposta recebida: {resposta}")
     self.label_resultado.text = resposta
+
+  def button_2_click(self, **event_args):
+    # Chamada para a função do backend
+    texto_do_backend = anvil.server.call('obter_texto')
+    self.label_1.text = texto_do_backend

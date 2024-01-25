@@ -19,3 +19,7 @@ def processar_bibtex(arquivo):
       except Exception as e:
         return f"Erro ao processar arquivo: {e}"
       return "Arquivo processado com sucesso!"
+
+@anvil.server.callable
+def obter_texto():
+    return "Texto fornecido pelo backend."
