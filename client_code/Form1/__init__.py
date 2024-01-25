@@ -32,8 +32,15 @@ class Form1(Form1Template):
       
       # Exibe os dados processados
       self.label_resultado.text = processed_data
+      # Converte a lista de strings em uma lista de dicionários e atualiza o DataGrid
+      # A chave 'autor' deve corresponder à Data Key configurada no seu DataGrid
+      self.data_grid_1.items = [{'autor': autor} for autor in processed_data]
+
+
+    
     else:
       print("Nenhum arquivo carregado")
+    
 
 
 
