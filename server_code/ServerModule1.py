@@ -14,6 +14,7 @@ def processar_bibtex(arquivo):
       # Aqui você pode processar o conteúdo do arquivo BibTeX
       try:
         bib_database = bibtexparser.parse_string(conteudo)
+        print(bib_database)
         # Aqui, você pode extrair informações adicionais se necessário
         return f"Arquivo com {len(bib_database.entries)} entradas processado com sucesso!"
       except Exception as e:
