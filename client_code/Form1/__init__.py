@@ -7,9 +7,18 @@ class Form1(Form1Template):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
+    # Configuração inicial do DataGrid
+    self.configure_data_grid()
 
     # Any code you write here will run before the form opens.
 
+  def configure_data_grid(self):
+    # Adiciona uma coluna ao DataGrid
+    self.data_grid_1.columns = [
+       {'title': "Autores", 'data_key': "autores"}
+    ]
+
+  
   def button_1_click(self, **event_args):
     resposta = anvil.server.call('testar_conexao')
     print(resposta)
@@ -32,6 +41,12 @@ class Form1(Form1Template):
       
       # Exibe os dados processados
       self.label_resultado.text = processed_data
+
+      if processed_data:
+        self.data_grid_1.items = [{'autores': autores} for autores in processed_data]
+      else:
+        print("Erro ao obter autores")
+      
     else:
       print("Nenhum arquivo carregado")
     
