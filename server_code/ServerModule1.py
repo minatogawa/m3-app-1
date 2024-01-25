@@ -12,7 +12,6 @@ def processar_bibtex(blob_media):
     bibtex_str = blob_media.get_bytes().decode()
     # Usa bibtexparser.parse_string para processar a string BibTeX
     bibtex_database = bibtexparser.parse_string(bibtex_str)
-    print(bibtex_database)
     # Processamento adicional conforme necessário...
     # Por exemplo, extrair informações específicas do BibTeX
     return str(bibtex_database.entries)  # Retorna uma representação string das entradas
