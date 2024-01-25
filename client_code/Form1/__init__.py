@@ -20,7 +20,7 @@ class Form1(Form1Template):
 
   # No evento de clique do botão (para uso futuro)
   def my_button_click(self, **event_args):
-    print("oi")
+    print("olá")
     if self.loaded_file:
       # Cria um objeto BlobMedia a partir do arquivo carregado
       blob = anvil.BlobMedia(content_type=self.loaded_file.content_type,
