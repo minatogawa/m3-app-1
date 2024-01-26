@@ -24,27 +24,55 @@ class Form1(Form1Template):
       blob = anvil.BlobMedia(content_type=self.loaded_file.content_type,
                               content=self.loaded_file.get_bytes(),
                               name=self.loaded_file.name)
-      
-      # Chama a função no servidor e passa o BlobMedia
-      lista_autores = anvil.server.call('processar_bibtex', blob)
-      
-      # Cria um Data Grid
+
+      dados = anvil.server.call('processar_bibtex_e_criar_dataframe', blob)
+
+      colunas = dados["colunas"]
+      linhas = dados["linhas"]
+  
+      # Criar o Data Grid e definir colunas
       grid = DataGrid()
-      grid.columns = [
-          {"id": "author_name", "title": "Nome do Autor", "data_key": "name"}
-      ]
+      grid.columns = [{"id": col, "title": col, "data_key": col} for col in colunas]
+  
+      # Preenchendo o Data Grid
+      for linha in linhas:
+          # Crie um dicionário mapeando nomes de colunas para valores de linha
+          item = {col: valor for col, valor in zip(colunas, linha)}
+          grid.add_component(DataRowPanel(item=item))
 
-      # Cria um RepeatingPanel
-      rp = RepeatingPanel(item_template=DataRowPanel)
-      rp.items = [{"name": autor} for autor in lista_autores]
-
-      # Adiciona o RepeatingPanel ao Data Grid
-      grid.add_component(rp)
-
-      # Adiciona o Data Grid ao formulário
+      
+      # Adicionando o Data Grid ao formulário
       self.add_component(grid)
+      
     else:
       print("Nenhum arquivo carregado")
+
+
+
+
+
+      
+      
+    #   # Chama a função no servidor e passa o BlobMedia
+    #   lista_autores = anvil.server.call('processar_bibtex', blob)
+      
+    #   # Cria um Data Grid
+    #   grid = DataGrid()
+    #   grid.columns = [
+    #       {"id": "author_name", "title": "Nome do Autor", "data_key": "name"}
+    #   ]
+
+    #   # Cria um RepeatingPanel
+    #   rp = RepeatingPanel(item_template=DataRowPanel)
+    #   rp.items = [{"name": autor} for autor in lista_autores]
+
+    #   # Adiciona o RepeatingPanel ao Data Grid
+    #   grid.add_component(rp)
+
+    #   # Adiciona o Data Grid ao formulário
+    #   self.add_component(grid)
+    # else:
+    #   print("Nenhum arquivo carregado")
       
 
     
