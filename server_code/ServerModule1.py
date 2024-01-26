@@ -14,11 +14,19 @@ def processar_bibtex_e_criar_dataframe(blob_media):
     # Usa bibtexparser.parse_string para processar a string BibTeX
     bibtex_database = bibtexparser.parse_string(bibtex_str)
 
+    # Selecionando apenas algumas colunas de interesse
+    colunas_desejadas = ['title', 'author', 'year', 'journal']
+
     # Processando as entradas para garantir que todos os dados sejam serializáveis
     entradas_processadas = []
     for entrada in bibtex_database.entries:
-        # Convertendo cada entrada para um dicionário, assegurando que todos os valores sejam strings
-        entrada_dict = {chave: str(valor) for chave, valor in entrada.items()}
+        entrada_dict = {}
+        for chave in colunas_desejadas:
+            # Verifica se a chave existe na entrada
+            if chave in entrada:
+                entrada_dict[chave] = str(entrada[chave])
+            else:
+                entrada_dict[chave] = ''
         entradas_processadas.append(entrada_dict)
 
     # Criando um DataFrame com os dados processados
