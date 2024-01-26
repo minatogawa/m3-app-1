@@ -32,13 +32,19 @@ class Form1(Form1Template):
   
       # Criar o Data Grid e definir colunas
       grid = DataGrid()
-      grid.columns = [{"id": col, "title": col, "data_key": col} for col in colunas]
+      # Ajustando a largura das colunas e habilitando quebra de linha
+      grid.columns = [{"id": col, "title": col, "data_key": col, "width": 200, "wrap": True} for col in colunas]
   
-      # Preenchendo o Data Grid
+      # Preenchimento do DataGrid com os dados
       for linha in linhas:
-          # Crie um dicionário mapeando nomes de colunas para valores de linha
-          item = {col: valor for col, valor in zip(colunas, linha)}
-          grid.add_component(DataRowPanel(item=item))
+        # Convertendo tudo para string e truncando se necessário
+        item = {col: (str(valor)[:100] + '...' if isinstance(valor, str) and len(valor) > 100 else str(valor)) for col, valor in zip(colunas, linha)}
+        
+        # Adicionando cada linha ao DataGrid
+        grid_row = DataRowPanel(item=item)
+        # Adicione um evento de clique que chama abrir_modal_com_conteudo_completo com um argumento de item específico
+        grid_row.set_event_handler('click', lambda event_args, item=item: self.abrir_modal_com_conteudo_completo(item))
+        grid.add_component(grid_row)
 
       
       # Adicionando o Data Grid ao formulário
@@ -47,6 +53,10 @@ class Form1(Form1Template):
     else:
       print("Nenhum arquivo carregado")
 
+  # A função de callback agora aceita 'item' como um argumento diretamente
+  def abrir_modal_com_conteudo_completo(self, item):
+    detalhes = "\n".join(f"{k}: {v}" for k, v in item.items())
+    alert(detalhes)
 
 
 
