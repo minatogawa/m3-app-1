@@ -36,15 +36,15 @@ class Form1(Form1Template):
       grid.columns = [{"id": col, "title": col, "data_key": col, "width": 200, "wrap": True} for col in colunas]
   
       # Preenchimento do DataGrid com os dados
+      
       for linha in linhas:
-        # Convertendo tudo para string e truncando se necessário
         item = {col: (str(valor)[:100] + '...' if isinstance(valor, str) and len(valor) > 100 else str(valor)) for col, valor in zip(colunas, linha)}
         
-        # Adicionando cada linha ao DataGrid
-        grid_row = DataRowPanel(item=item)
-        # Adicione um evento de clique que chama abrir_modal_com_conteudo_completo com um argumento de item específico
-        grid_row.set_event_handler('click', lambda event_args, item=item: self.abrir_modal_com_conteudo_completo(item))
-        grid.add_component(grid_row)
+        # Crie uma instância do seu CustomRowForm para cada linha
+        custom_row_form = CustomRowForm(item=item)
+        # Defina um evento 'x-click' que chama abrir_modal_com_conteudo_completo
+        custom_row_form.set_event_handler('x-click', self.abrir_modal_com_conteudo_completo)
+        grid.add_component(custom_row_form)
 
       
       # Adicionando o Data Grid ao formulário
@@ -59,31 +59,6 @@ class Form1(Form1Template):
     alert(detalhes)
 
 
-
-
-      
-      
-    #   # Chama a função no servidor e passa o BlobMedia
-    #   lista_autores = anvil.server.call('processar_bibtex', blob)
-      
-    #   # Cria um Data Grid
-    #   grid = DataGrid()
-    #   grid.columns = [
-    #       {"id": "author_name", "title": "Nome do Autor", "data_key": "name"}
-    #   ]
-
-    #   # Cria um RepeatingPanel
-    #   rp = RepeatingPanel(item_template=DataRowPanel)
-    #   rp.items = [{"name": autor} for autor in lista_autores]
-
-    #   # Adiciona o RepeatingPanel ao Data Grid
-    #   grid.add_component(rp)
-
-    #   # Adiciona o Data Grid ao formulário
-    #   self.add_component(grid)
-    # else:
-    #   print("Nenhum arquivo carregado")
-      
 
     
 
