@@ -2,10 +2,22 @@
  This CSS implements the Material Design 3 look and feel for Anvil apps.
  **/
 
-[data-grid-container] {
-  overflow-x: auto; /* Adiciona uma barra de rolagem horizontal se necessário */
-  white-space: nowrap; /* Garante que o conteúdo não quebre em linhas novas */
-}
+.wrap-text .cell {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 150px; /* Ajuste a largura máxima conforme necessário */
+    padding: 4px; /* Aumenta o espaçamento dentro das células */
+    font-size: 0.8em; /* Reduz o tamanho da fonte */
+    border: none; /* Remove a borda do Button para fazê-lo parecer um Label */
+    background-color: transparent; /* Faz o Button ter fundo transparente */
+  }
+  .wrap-text .cell:hover {
+    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
+  }
+  .data-grid-header .cell {
+    writing-mode: vertical-lr; /* Rotaciona o texto do cabeçalho */
+    text-overflow: ellipsis; /* Adiciona "..." se o texto do cabeçalho for muito longo */
+  }
 
 /* Stop panel-cols cutting off drop shadows */
 .anvil-panel-col {
