@@ -2,10 +2,11 @@
  This CSS implements the Material Design 3 look and feel for Anvil apps.
  **/
 
-[data-grid-container] {
-  overflow-x: auto; /* Adiciona uma barra de rolagem horizontal se necessário */
-  white-space: nowrap; /* Garante que o conteúdo não quebre em linhas novas */
+.anvil-role-flow-scroll-x .flow-panel-gutter {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
 }
+
 
 /* Stop panel-cols cutting off drop shadows */
 .anvil-panel-col {
