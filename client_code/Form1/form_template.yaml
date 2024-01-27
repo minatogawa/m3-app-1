@@ -18,11 +18,11 @@ components:
     type: FileLoader
     layout_properties: {grid_position: 'PDXLQB,MSDTOK'}
     event_bindings: {change: file_loader_1_change}
-  - name: my_button
-    properties: {text: my_button, enabled: true, visible: false}
+  - name: process_archive
+    properties: {text: Processar Arquivo, enabled: true, visible: false}
     type: Button
     layout_properties: {grid_position: 'MUYSTY,ZUPKFC'}
-    event_bindings: {click: my_button_click}
+    event_bindings: {click: process_archive_click}
 - type: FlowPanel
   properties: {}
   name: navbar_links
