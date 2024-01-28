@@ -2,6 +2,14 @@
  This CSS implements the Material Design 3 look and feel for Anvil apps.
  **/
 
+.data-grid-cell-clamp {
+  max-width: 250px; /* Ajuste a largura máxima conforme necessário */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 /* Adicionar rolagem horizontal ao DataGrid */
 .anvil-role-wide .data-grid-child-panel {
   overflow-x: auto; /* Habilita a rolagem horizontal */
