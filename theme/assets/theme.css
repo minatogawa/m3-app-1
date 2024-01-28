@@ -3,10 +3,11 @@
  **/
 
 .data-grid-cell-clamp {
-  max-width: 250px; /* Ajuste a largura máxima conforme necessário */
-  white-space: nowrap;
+  max-width: 250px; /* Ajuste a largura máxima conforme necessário, ou use calc(100%) se for necessário percentual */
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+  display: block; /* ou 'block', dependendo da sua estrutura */
 }
 
 

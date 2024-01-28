@@ -39,21 +39,22 @@ class Form1(Form1Template):
       for linha in linhas:
           # Crie um dicionário mapeando nomes de colunas para valores de linha
           item = {col: valor for col, valor in zip(colunas, linha)}
-          grid.add_component(DataRowPanel(item=item))
-
-
-      # Preenchendo o Data Grid
-      for linha in linhas:
-        # Crie um dicionário mapeando nomes de colunas para valores de linha
-        item = {col: valor for col, valor in zip(colunas, linha)}
-        data_row_panel = DataRowPanel(item=item)
-  
-        # Aqui você adiciona a classe a cada componente da linha
-        for component in data_row_panel.get_components():
-            component.add_class('data-grid-cell-clamp')
-  
-        grid.add_component(data_row_panel)
-
+          data_row_panel = DataRowPanel(item=item)
+      
+          # Aqui você adiciona a classe a cada componente da linha
+          for component in data_row_panel.get_components():
+              if isinstance(component, Label):
+                  component.add_class('data-grid-cell-clamp')
+                  # Se a célula for do tipo Abstract, aplique a regra de truncagem
+                  if 'abstract' in component.text.lower():  
+                      component.style = {'max-width': '250px', 
+                                        'overflow': 'hidden',
+                                        'white-space': 'nowrap',
+                                        'text-overflow': 'ellipsis',
+                                        'display': 'block'}
+      
+          grid.add_component(data_row_panel)
+      
       # Adicionando o Data Grid ao formulário
       self.add_component(grid)
 
