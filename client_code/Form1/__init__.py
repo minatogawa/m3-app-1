@@ -32,6 +32,7 @@ class Form1(Form1Template):
   
       # Criar o Data Grid e definir colunas
       grid = DataGrid()
+      grid.role = 'wide'
       grid.columns = [{"id": col, "title": col, "data_key": col, "width": "200"} for col in colunas]
       
       # Preenchendo o Data Grid

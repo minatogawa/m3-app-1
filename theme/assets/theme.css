@@ -2,6 +2,16 @@
  This CSS implements the Material Design 3 look and feel for Anvil apps.
  **/
 
+/* Adicionar rolagem horizontal ao DataGrid */
+.anvil-role-wide .data-grid-child-panel {
+  overflow-x: auto; /* Habilita a rolagem horizontal */
+}
+
+.anvil-role-wide .anvil-data-row-panel {
+  flex-wrap: nowrap; /* Impede que os itens sejam empilhados verticalmente */
+  min-width: min-content; /* Garante que o conteúdo defina a largura mínima necessária */
+}
+
 /* Stop panel-cols cutting off drop shadows */
 .anvil-panel-col {
   padding-bottom: 10px;
@@ -1040,3 +1050,4 @@ div.plot-container.plotly svg.main-svg {
 .anvil-spinner {
     --anvil-spinner-bg: %color:Surface Variant%;
 }
+
