@@ -2,6 +2,14 @@
  This CSS implements the Material Design 3 look and feel for Anvil apps.
  **/
 
+.data-grid-container {
+  /* Estilos para o container do DataGrid */
+  overflow-x: auto; /* Se desejar rolagem horizontal */
+  padding: 10px; /* Espaçamento interno conforme necessário */
+  border: 1px solid #ccc; /* Borda opcional */
+  /* Outros estilos conforme necessário */
+}
+
 /* Adicionar rolagem horizontal ao DataGrid */
 .anvil-role-wide .data-grid-child-panel {
   overflow-x: auto; /* Habilita a rolagem horizontal */
