@@ -3,6 +3,13 @@ import bibtexparser
 import pandas as pd
 import io
 
+
+# Função para truncar o texto
+def truncar_texto(texto, max_length=180):
+    if len(texto) > max_length:
+        return texto[:max_length] + '…'
+    return texto
+
 @anvil.server.callable
 def testar_conexao():
   return "Conexão bem-sucedida!"
@@ -23,6 +30,10 @@ def processar_bibtex_e_criar_dataframe(blob_media):
 
     # Criando um DataFrame com os dados processados
     df = pd.DataFrame(entradas_processadas)
+
+    # Aplicar a função de truncar em cada célula do DataFrame
+    for coluna in df.columns:
+      df[coluna] = df[coluna].apply(lambda x: truncar_texto(x) if isinstance(x, str) else x)
 
     # Convertendo as linhas e colunas para listas
     linhas = df.values.tolist()
