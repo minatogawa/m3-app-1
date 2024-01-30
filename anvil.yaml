@@ -13,4 +13,34 @@ runtime_options:
   server_spec: {base: python310-minimal}
 metadata: {title: ''}
 startup_form: Form1
+db_schema:
+  bibtex_entries:
+    client: none
+    server: full
+    columns:
+    - name: author
+      admin_ui: {width: 200, order: 0}
+      type: string
+    - name: title
+      admin_ui: {width: 200, order: 1}
+      type: string
+    - name: journal
+      admin_ui: {width: 200, order: 2}
+      type: string
+    - name: year
+      admin_ui: {width: 200, order: 3}
+      type: string
+    - name: volume
+      admin_ui: {width: 200, order: 4}
+      type: string
+    - name: number
+      admin_ui: {width: 200, order: 5}
+      type: string
+    - name: month
+      admin_ui: {width: 200, order: 6}
+      type: string
+    - name: abstract
+      admin_ui: {width: 200, order: 7}
+      type: string
+    title: bibtex_entries
 renamed: true
