@@ -13,4 +13,5 @@ runtime_options:
   server_spec: {base: python310-minimal}
 metadata: {title: ''}
 startup_form: Form1
+db_schema: null
 renamed: true
