@@ -11,10 +11,6 @@ def truncar_texto(texto, max_length=180):
     return texto
 
 @anvil.server.callable
-def testar_conexao():
-  return "Conexão bem-sucedida!"
-
-@anvil.server.callable
 def processar_bibtex_e_criar_dataframe(blob_media):
     # Lê o arquivo como uma string
     bibtex_str = blob_media.get_bytes().decode()

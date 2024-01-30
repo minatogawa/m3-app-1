@@ -8,11 +8,6 @@ components:
   name: content_panel
   layout_properties: {slot: default}
   components:
-  - name: button_1
-    properties: {text: button_1}
-    type: Button
-    layout_properties: {grid_position: 'DWNWSG,SNYTHB'}
-    event_bindings: {click: button_1_click}
   - name: file_loader_1
     properties: {file_types: '[".bib"]'}
     type: FileLoader

@@ -8,10 +8,6 @@ class Form1(Form1Template):
     self.init_components(**properties)
     # Any code you write here will run before the form opens.
 
-  def button_1_click(self, **event_args):
-    resposta = anvil.server.call('testar_conexao')
-    print(resposta)
-
   def file_loader_1_change(self, file, **event_args):
     self.loaded_file = file
     self.process_archive.visible = True
