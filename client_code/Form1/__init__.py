@@ -43,4 +43,22 @@ class Form1(Form1Template):
     else:
       print("Nenhum arquivo carregado")
 
+    # Cria o botão
+    self.btn_hello = Button(text="Mostrar Olá")
+    self.btn_hello.set_event_handler('click', self.on_hello_button_click)
+    self.add_component(self.btn_hello)
+
+  def on_hello_button_click(self, **event_args):
+    # Cria a label
+    label_hello = Label(text="Olá")
+    # Adiciona a label ao formulário
+    self.add_component(label_hello)
+    # Chama a função do backend para gerar o gráfico
+    if self.loaded_file:  # Certifica-se de que um arquivo foi carregado
+        grafico = anvil.server.call('gerar_grafico_publicacoes_por_ano', self.loaded_file)
+        # Exibir o gráfico
+        self.add_component(Image(source=grafico))
+    else:
+        print("Nenhum arquivo carregado")
+
 

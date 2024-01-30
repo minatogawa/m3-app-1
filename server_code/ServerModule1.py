@@ -2,6 +2,7 @@ import anvil.server
 import bibtexparser
 import pandas as pd
 import io
+import matplotlib.pyplot as plt
 
 
 # Função para truncar o texto
@@ -37,5 +38,35 @@ def processar_bibtex_e_criar_dataframe(blob_media):
 
     return {"colunas": colunas, "linhas": linhas}
 
-  
+
+@anvil.server.callable
+def gerar_grafico_publicacoes_por_ano(blob_media):
+    # Lê o arquivo como uma string
+    bibtex_str = blob_media.get_bytes().decode()
+    # Usa bibtexparser.parse_string para processar a string BibTeX
+    bibtex_database = bibtexparser.parse_string(bibtex_str)
+
+    # Extração dos anos das publicações
+    anos = []
+    for entrada in bibtex_database.entries:
+        ano = entrada.get('year')
+        if ano and ano.isdigit():  # Verifica se o ano é um dígito
+            anos.append(ano)
+
+    anos_contagem = {ano: anos.count(ano) for ano in set(anos)}
+
+    # Criar o gráfico
+    plt.bar(anos_contagem.keys(), anos_contagem.values())
+    plt.xlabel('Ano')
+    plt.ylabel('Quantidade de Publicações')
+    plt.title('Publicações por Ano')
+
+    # Salvar o gráfico como um BlobMedia
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    grafico = anvil.BlobMedia('image/png', buf, name='grafico.png')
+    buf.close()
+
+    return grafico
 
