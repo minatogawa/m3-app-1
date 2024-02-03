@@ -22,3 +22,9 @@ components:
   properties: {}
   name: navbar_links
   layout_properties: {slot: nav-right}
+  components:
+  - name: button_logout
+    properties: {text: LOGOUT, icon: 'fa:sign-out'}
+    type: Button
+    layout_properties: {}
+    event_bindings: {click: button_logout_click}

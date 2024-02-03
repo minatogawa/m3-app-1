@@ -1,5 +1,9 @@
 from ._anvil_designer import Form1Template
 from anvil import *
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
+import anvil.users
 import anvil.server
 
 class Form1(Form1Template):
@@ -7,6 +11,13 @@ class Form1(Form1Template):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
     # Any code you write here will run before the form opens.
+
+  def button_logout_click(self, **event_args):
+    # Encerra a sessão do usuário atual
+    anvil.users.logout()
+    
+    # Redireciona o usuário de volta ao Form1 (tela de login)
+    anvil.open_form('signin_signup')
 
   def file_loader_1_change(self, file, **event_args):
     self.loaded_file = file
