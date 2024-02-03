@@ -77,8 +77,20 @@ db_schema:
     - name: publisher
       admin_ui: {width: 200}
       type: string
+    - name: session
+      admin_ui: {width: 200, order: 9}
+      type: link_single
+      target: sessions
+  sessions:
+    client: none
+    server: full
+    columns:
     - name: user
-      admin_ui: {width: 200}
+      admin_ui: {width: 200, order: 1}
       type: link_single
       target: users
+    - name: upload_date
+      admin_ui: {width: 200, order: 2}
+      type: datetime
+    title: sessions
 renamed: true
