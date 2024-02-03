@@ -1,3 +1,2 @@
 bibtexparser==2.0.0b5
 pandas==2.2.0rc0
-bibtexparser==2.0.0b6

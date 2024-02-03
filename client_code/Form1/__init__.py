@@ -20,38 +20,19 @@ class Form1(Form1Template):
     anvil.open_form('signin_signup')
 
   def file_loader_1_change(self, file, **event_args):
+    # Salva o arquivo carregado em uma variável de instância para uso posterior
     self.loaded_file = file
+    # Torna o botão de processamento visível
     self.process_archive.visible = True
 
-  # No evento de clique do botão (para uso futuro)
+  # No evento de clique do botão (para processar o arquivo .bib)
   def process_archive_click(self, **event_args):
-    print("Processando Arquivo")
     if self.loaded_file:
-      # Cria um objeto BlobMedia a partir do arquivo carregado
-      blob = anvil.BlobMedia(content_type=self.loaded_file.content_type,
-                              content=self.loaded_file.get_bytes(),
-                              name=self.loaded_file.name)
-
-      dados = anvil.server.call('processar_bibtex_e_criar_dataframe', blob)
-
-      colunas = dados["colunas"]
-      linhas = dados["linhas"]
-  
-      # Criar o Data Grid e definir colunas
-      grid = DataGrid()
-      grid.role = 'wide'
-      grid.columns = [{"id": col, "title": col, "data_key": col, "width": "200"} for col in colunas]
-      
-      # Preenchendo o Data Grid
-      for linha in linhas:
-          # Crie um dicionário mapeando nomes de colunas para valores de linha
-          item = {col: valor for col, valor in zip(colunas, linha)}
-          grid.add_component(DataRowPanel(item=item))
-
-      # Adicionando o Data Grid ao formulário
-      self.add_component(grid)
-
+      # Chama a função do servidor para processar e armazenar os dados do arquivo .bib
+      resultado = anvil.server.call('processar_bibtex_e_armazenar', self.loaded_file)
+      # Exibe uma mensagem de confirmação
+      alert(resultado)
     else:
-      print("Nenhum arquivo carregado")
+      alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
 
 

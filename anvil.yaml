@@ -44,5 +44,41 @@ db_schema:
     - name: signed_up
       admin_ui: {order: 6, width: 200}
       type: datetime
+    - name: email_confirmation_key
+      admin_ui: {width: 200}
+      type: string
     title: Users
+  bib_data:
+    title: bib_data
+    client: none
+    server: full
+    columns:
+    - name: author
+      admin_ui: {width: 200}
+      type: string
+    - name: title
+      admin_ui: {width: 200}
+      type: string
+    - name: year
+      admin_ui: {width: 200}
+      type: string
+    - name: journal
+      admin_ui: {width: 200}
+      type: string
+    - name: doi
+      admin_ui: {width: 200}
+      type: string
+    - name: keywords
+      admin_ui: {width: 200}
+      type: string
+    - name: correspondence_address
+      admin_ui: {width: 200}
+      type: string
+    - name: publisher
+      admin_ui: {width: 200}
+      type: string
+    - name: user
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
 renamed: true

@@ -4,42 +4,37 @@ from anvil.tables import app_tables
 import anvil.users
 import anvil.server
 import bibtexparser
-import pandas as pd
 import io
 
-
-# Função para truncar o texto
-def truncar_texto(texto, max_length=180):
-    if len(texto) > max_length:
-        return texto[:max_length] + '…'
-    return texto
-
 @anvil.server.callable
-def processar_bibtex_e_criar_dataframe(blob_media):
+def processar_bibtex_e_armazenar(blob_media):
+    # Assumindo que o usuário está logado
+    usuario_atual = anvil.users.get_user()
+
     # Lê o arquivo como uma string
     bibtex_str = blob_media.get_bytes().decode()
-    # Usa bibtexparser.parse_string para processar a string BibTeX
+    # Usa bibtexparser.loads para processar a string BibTeX
     bibtex_database = bibtexparser.parse_string(bibtex_str)
 
-    # Processando as entradas para garantir que todos os dados sejam serializáveis
-    entradas_processadas = []
+    # Para cada entrada no arquivo BibTeX
     for entrada in bibtex_database.entries:
-        # Convertendo cada entrada para um dicionário, assegurando que todos os valores sejam strings
-        entrada_dict = {chave: str(valor) for chave, valor in entrada.items()}
-        entradas_processadas.append(entrada_dict)
+        # Convertendo cada entrada para um dicionário, assegurando que todos os valores sejam strings ou None
+        entrada_dict = {chave: str(valor) if valor else None for chave, valor in entrada.items()}
 
-    # Criando um DataFrame com os dados processados
-    df = pd.DataFrame(entradas_processadas)
+        # Inserir entrada na tabela de dados
+        app_tables.bib_data.add_row(
+            user=usuario_atual,
+            author=entrada_dict.get('author', None),
+            title=entrada_dict.get('title', None),
+            year=entrada_dict.get('year', None),
+            journal=entrada_dict.get('journal', None),
+            doi=entrada_dict.get('doi', None),
+            keywords=entrada_dict.get('keywords', None),
+            correspondence_address=entrada_dict.get('address', None),  # Assumindo que 'address' seja o campo correto
+            publisher=entrada_dict.get('publisher', None)
+            # Os campos devem corresponder exatamente aos nomes das colunas na sua tabela de dados
+        )
 
-    # Aplicar a função de truncar em cada célula do DataFrame
-    for coluna in df.columns:
-      df[coluna] = df[coluna].apply(lambda x: truncar_texto(x) if isinstance(x, str) else x)
-
-    # Convertendo as linhas e colunas para listas
-    linhas = df.values.tolist()
-    colunas = df.columns.astype(str).tolist()
-
-    return {"colunas": colunas, "linhas": linhas}
-
+    return "Dados processados e armazenados com sucesso."
   
 
