@@ -21,7 +21,7 @@ components:
   - name: data_grid
     properties:
       columns:
-      - {id: JKSDUP, title: Author(s), data_key: '"author"'}
+      - {id: JKSDUP, title: Author(s), data_key: '"author"', expand: false}
       - {id: VJQQOR, title: Title, data_key: '"title"'}
       - {id: OJLQEN, title: Year, data_key: '"year"'}
       - {id: QJMMCM, data_key: '"doi"', title: DOI}

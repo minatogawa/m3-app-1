@@ -47,6 +47,6 @@ class Form1(Form1Template):
         # Chama a função do servidor para buscar os dados
         dados = anvil.server.call('buscar_dados')
         # Atualiza os itens do Data Grid diretamente com os dados
-        self.data_grid.items = dados
+        self.repeating_panel_1.items = dados
     except Exception as e:
         print(e)  # Isso imprimirá o erro no console de execução

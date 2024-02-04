@@ -44,6 +44,7 @@ def processar_bibtex_e_armazenar(blob_media):
 
 @anvil.server.callable
 def buscar_dados():
+    print("Iniciando a busca de dados")  # Isso deve aparecer no console do Anvil
     usuario_atual = anvil.users.get_user()
     sessoes = app_tables.sessions.search(user=usuario_atual)  # Busca sessões do usuário atual
     dados = []

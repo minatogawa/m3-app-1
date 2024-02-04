@@ -1,3 +1,29 @@
 is_package: true
-container: {type: DataRowPanel}
-components: []
+container:
+  type: DataRowPanel
+  data_bindings: []
+components:
+- name: label_1
+  properties: {}
+  type: Label
+  layout_properties: {column: JKSDUP}
+  data_bindings:
+  - {property: text, code: 'self.item[''author'']', writeback: false}
+- name: label_2
+  properties: {}
+  type: Label
+  layout_properties: {column: VJQQOR}
+  data_bindings:
+  - {property: text, code: 'self.item[''title'']', writeback: false}
+- name: label_3
+  properties: {}
+  type: Label
+  layout_properties: {column: OJLQEN}
+  data_bindings:
+  - {property: text, code: 'self.item[''year'']', writeback: false}
+- name: label_4
+  properties: {}
+  type: Label
+  layout_properties: {column: QJMMCM}
+  data_bindings:
+  - {property: text, code: 'self.item[''doi'']', writeback: false}
