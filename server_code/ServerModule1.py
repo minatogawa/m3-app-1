@@ -41,5 +41,20 @@ def processar_bibtex_e_armazenar(blob_media):
 
     # Retorna uma mensagem de confirmação
     return f"Dados processados e armazenados com sucesso para a sessão."
-  
 
+@anvil.server.callable
+def buscar_dados():
+    usuario_atual = anvil.users.get_user()
+    sessoes = app_tables.sessions.search(user=usuario_atual)  # Busca sessões do usuário atual
+    dados = []
+    for sessao in sessoes:
+        for entrada in app_tables.bib_data.search(session=sessao):
+            # Aqui nós convertemos cada entrada em um dicionário
+            dados.append({
+                'author': entrada['author'],
+                'title': entrada['title'],
+                'year': entrada['year'],
+                'doi': entrada['doi'],
+                # Inclua aqui outros campos conforme necessário
+            })
+    return dados

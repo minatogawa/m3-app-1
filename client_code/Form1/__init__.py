@@ -11,6 +11,8 @@ class Form1(Form1Template):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
     # Any code you write here will run before the form opens.
+    # Preenche o Data Grid com dados
+    self.preencher_data_grid()
 
   def button_logout_click(self, **event_args):
     # Encerra a sessão do usuário atual
@@ -36,3 +38,15 @@ class Form1(Form1Template):
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
 
 
+  def mostrar_dados(self):
+    dados = anvil.server.call('buscar_dados')
+    self.data_grid.items = dados  # Atualiza o Data Grid com os dados recebidos
+
+  def preencher_data_grid(self):
+    try:
+        # Chama a função do servidor para buscar os dados
+        dados = anvil.server.call('buscar_dados')
+        # Atualiza os itens do Data Grid diretamente com os dados
+        self.data_grid.items = dados
+    except Exception as e:
+        print(e)  # Isso imprimirá o erro no console de execução
