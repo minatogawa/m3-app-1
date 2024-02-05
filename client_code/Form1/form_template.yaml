@@ -4,7 +4,7 @@ container:
   properties: {html: '@theme:standard-page.html'}
 components:
 - type: ColumnPanel
-  properties: {col_widths: '{"RUQIEN":30,"LVTPCH":30}'}
+  properties: {col_widths: '{}'}
   name: content_panel
   layout_properties: {slot: default}
   components:
@@ -22,29 +22,36 @@ components:
     properties: {height: 71.33331298828125}
     type: Spacer
     layout_properties: {grid_position: 'USBRBM,NRFAGX'}
-  - name: plot_1
-    properties: {height: 426}
-    type: Plot
-    layout_properties: {grid_position: 'KWTBUG,RUQIEN'}
-  - name: data_grid
-    properties:
-      columns:
-      - {id: JKSDUP, title: Author(s), data_key: '"author"', expand: false}
-      - {id: VJQQOR, title: Title, data_key: '"title"'}
-      - {id: OJLQEN, title: Year, data_key: '"year"'}
-      - {id: QJMMCM, data_key: '"doi"', title: DOI}
-      visible: false
-      rows_per_page: 2
-    type: DataGrid
+  - name: flow_panel_1
+    properties: {}
+    type: FlowPanel
+    layout_properties: {grid_position: 'YVFEIL,JLPLVA'}
     components:
-    - name: repeating_panel_1
-      properties: {item_template: Form1.RowTemplate1}
-      type: RepeatingPanel
-      data_bindings:
-      - {property: items, code: 'self.item['''']', writeback: false}
-    layout_properties: {grid_position: 'KWTBUG,LVTPCH'}
+    - name: plot_1
+      properties: {height: 450}
+      type: Plot
+      layout_properties: {width: 342.984}
+    - name: data_grid
+      properties:
+        columns:
+        - {id: JKSDUP, title: Author(s), data_key: '"author"', expand: false}
+        - {id: VJQQOR, title: Title, data_key: '"title"'}
+        - {id: OJLQEN, title: Year, data_key: '"year"', width: 81, expand: false}
+        - {id: QJMMCM, data_key: '"doi"', title: DOI}
+        visible: false
+        rows_per_page: 2
+        role: elevated-card
+      type: DataGrid
+      components:
+      - name: repeating_panel_1
+        properties: {item_template: Form1.RowTemplate1}
+        type: RepeatingPanel
+        data_bindings:
+        - {property: items, code: 'self.item['''']', writeback: false}
+      layout_properties: {width: 601.891}
+      data_bindings: []
   - name: plot_2
-    properties: {height: 646}
+    properties: {height: 401.5}
     type: Plot
     layout_properties: {grid_position: 'UFBHDP,NOIIOX'}
 - type: FlowPanel

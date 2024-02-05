@@ -7,10 +7,7 @@ roles:
   components: [ColumnPanel, LinearPanel, XYPanel, RepeatingPanel]
   display_in_toolbox: true
   title: Outlined Card
-- name: elevated-card
-  components: [ColumnPanel, LinearPanel, XYPanel, RepeatingPanel]
-  display_in_toolbox: false
-  title: Elevated Card
+- {name: elevated-card, components: null, display_in_toolbox: false, title: Elevated Card}
 - name: tonal-card
   components: [ColumnPanel, LinearPanel, XYPanel, RepeatingPanel]
   display_in_toolbox: false
