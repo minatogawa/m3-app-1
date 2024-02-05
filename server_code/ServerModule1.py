@@ -43,19 +43,32 @@ def processar_bibtex_e_armazenar(blob_media):
     return f"Dados processados e armazenados com sucesso para a sessão."
 
 @anvil.server.callable
-def buscar_dados():
-    print("Iniciando a busca de dados")  # Isso deve aparecer no console do Anvil
+def buscar_dados_da_ultima_sessao():
+    print("Iniciando a busca de dados da última sessão")
     usuario_atual = anvil.users.get_user()
-    sessoes = app_tables.sessions.search(user=usuario_atual)  # Busca sessões do usuário atual
-    dados = []
-    for sessao in sessoes:
-        for entrada in app_tables.bib_data.search(session=sessao):
-            # Aqui nós convertemos cada entrada em um dicionário
-            dados.append({
-                'author': entrada['author'],
-                'title': entrada['title'],
-                'year': entrada['year'],
-                'doi': entrada['doi'],
-                # Inclua aqui outros campos conforme necessário
-            })
+    
+    # Encontra a última sessão ordenando por 'upload_date' e pegando a primeira
+    ultima_sessao = app_tables.sessions.search(
+        tables.order_by("upload_date", ascending=False),
+        user=usuario_atual
+    )[0]
+    
+    # Busca entradas associadas à última sessão
+    entradas_da_ultima_sessao = app_tables.bib_data.search(
+        session=ultima_sessao
+    )
+    
+    # Converte as entradas em dicionários para passar ao front end
+    dados = [{
+        'author': entrada['author'],
+        'title': entrada['title'],
+        'year': entrada['year'],
+        'journal': entrada['journal'],
+        'doi': entrada['doi'],
+        'keywords': entrada['keywords'],
+        'correspondence_address': entrada['correspondence_address'],
+        'publisher': entrada['publisher']
+    } for entrada in entradas_da_ultima_sessao]
+    
+    print(dados)  # Isso imprimirá os dados no log do servidor
     return dados

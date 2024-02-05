@@ -48,8 +48,8 @@ class Form1(Form1Template):
 
   def preencher_data_grid(self):
     try:
-        # Chama a função do servidor para buscar os dados
-        dados = anvil.server.call('buscar_dados')
+        # Chama a função do servidor para buscar os dados da última sessão
+        dados = anvil.server.call('buscar_dados_da_ultima_sessao')
         # Atualiza os itens do Data Grid diretamente com os dados
         self.repeating_panel_1.items = dados
     except Exception as e:
