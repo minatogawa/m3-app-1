@@ -70,7 +70,6 @@ def buscar_dados_da_ultima_sessao():
         'publisher': entrada['publisher']
     } for entrada in entradas_da_ultima_sessao]
     
-    print(dados)  # Isso imprimirá os dados no log do servidor
     return dados
 
 
@@ -96,3 +95,24 @@ def dados_papers_ultima_sessao_por_ano():
     papers_ordenados_por_ano = sorted(papers_por_ano.items())
     
     return papers_ordenados_por_ano
+
+@anvil.server.callable
+def top_journals_ultima_sessao():
+    usuario_atual = anvil.users.get_user()
+    ultima_sessao = app_tables.sessions.search(
+        tables.order_by("upload_date", ascending=False),
+        user=usuario_atual
+    )[0]
+    
+    entradas = app_tables.bib_data.search(session=ultima_sessao)
+    contador_journals = {}
+    
+    for entrada in entradas:
+        journal = entrada['journal']
+        if journal:
+            contador_journals[journal] = contador_journals.get(journal, 0) + 1
+    
+    # Ordena o dicionário por contagem e pega os top 10
+    top_journals = sorted(contador_journals.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+    return top_journals

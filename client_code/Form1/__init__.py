@@ -8,6 +8,7 @@ import anvil.users
 import anvil.server
 import plotly.graph_objs as go
 
+
 class Form1(Form1Template):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
@@ -43,6 +44,7 @@ class Form1(Form1Template):
     else:
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
     self.desenhar_grafico()
+    self.desenhar_grafico_top_journals()
 
 
   def mostrar_dados(self):
@@ -73,3 +75,19 @@ class Form1(Form1Template):
         # Exibe o gráfico no Plot component
         self.plot_1.data = fig.data
         self.plot_1.layout = fig.layout
+
+  def desenhar_grafico_top_journals(self):
+        top_journals = anvil.server.call('top_journals_ultima_sessao')
+        
+        # Cria as coordenadas X e Y para o gráfico
+        nomes_journals = [journal for journal, _ in top_journals]
+        contagem_papers = [contagem for _, contagem in top_journals]
+        
+        # Cria o gráfico de barras
+        data = [go.Bar(x=nomes_journals, y=contagem_papers)]
+        layout = go.Layout(title='Top 10 Journals com Mais Publicações', xaxis={'title': 'Journal'}, yaxis={'title': 'Número de Publicações'})
+        fig = go.Figure(data=data, layout=layout)
+
+        # Exibe o gráfico no componente Plot
+        self.plot_2.data = fig.data
+        self.plot_2.layout = fig.layout
