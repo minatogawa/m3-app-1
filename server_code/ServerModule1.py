@@ -72,3 +72,27 @@ def buscar_dados_da_ultima_sessao():
     
     print(dados)  # Isso imprimirá os dados no log do servidor
     return dados
+
+
+@anvil.server.callable
+def dados_papers_ultima_sessao_por_ano():
+    usuario_atual = anvil.users.get_user()
+    ultima_sessao = app_tables.sessions.search(
+        tables.order_by("upload_date", ascending=False),
+        user=usuario_atual
+    )[0]
+
+    entradas = app_tables.bib_data.search(session=ultima_sessao)
+    papers_por_ano = {}
+    
+    for entrada in entradas:
+        ano = entrada['year']
+        if ano in papers_por_ano:
+            papers_por_ano[ano] += 1
+        else:
+            papers_por_ano[ano] = 1
+    
+    # Ordena o dicionário por ano (chave) e converte em uma lista de tuplas
+    papers_ordenados_por_ano = sorted(papers_por_ano.items())
+    
+    return papers_ordenados_por_ano

@@ -1,10 +1,12 @@
 from ._anvil_designer import Form1Template
 from anvil import *
+import plotly.graph_objects as go
 import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.users
 import anvil.server
+import plotly.graph_objs as go
 
 class Form1(Form1Template):
   def __init__(self, **properties):
@@ -40,6 +42,7 @@ class Form1(Form1Template):
       self.data_grid.visible = True
     else:
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
+    self.desenhar_grafico()
 
 
   def mostrar_dados(self):
@@ -54,3 +57,19 @@ class Form1(Form1Template):
         self.repeating_panel_1.items = dados
     except Exception as e:
         print(e)  # Isso imprimirá o erro no console de execução
+
+  def desenhar_grafico(self):
+        dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
+
+        # Cria as coordenadas X e Y para o gráfico
+        anos = [ano for ano, _ in dados_grafico]
+        contagem_papers = [contagem for _, contagem in dados_grafico]
+        
+        # Cria o gráfico
+        data = [go.Bar(x=anos, y=contagem_papers)]
+        layout = go.Layout(title='Papers published per year')
+        fig = go.Figure(data=data, layout=layout)
+
+        # Exibe o gráfico no Plot component
+        self.plot_1.data = fig.data
+        self.plot_1.layout = fig.layout

@@ -18,6 +18,14 @@ components:
     type: Button
     layout_properties: {grid_position: 'MUYSTY,ZUPKFC'}
     event_bindings: {click: process_archive_click}
+  - name: spacer_1
+    properties: {height: 71.33331298828125}
+    type: Spacer
+    layout_properties: {grid_position: 'USBRBM,NRFAGX'}
+  - name: plot_1
+    properties: {height: 240}
+    type: Plot
+    layout_properties: {grid_position: 'KWTBUG,RUQIEN'}
   - name: data_grid
     properties:
       columns:
@@ -26,6 +34,7 @@ components:
       - {id: OJLQEN, title: Year, data_key: '"year"'}
       - {id: QJMMCM, data_key: '"doi"', title: DOI}
       visible: false
+      rows_per_page: 2
     type: DataGrid
     components:
     - name: repeating_panel_1
@@ -33,7 +42,11 @@ components:
       type: RepeatingPanel
       data_bindings:
       - {property: items, code: 'self.item['''']', writeback: false}
-    layout_properties: {grid_position: 'LSQKLQ,DOGZHN'}
+    layout_properties: {grid_position: 'KWTBUG,LVTPCH RTHMQM,QPRADO'}
+  - name: plot_2
+    properties: {}
+    type: Plot
+    layout_properties: {grid_position: 'KWTBUG,LVTPCH EQWAGA,GJMDLY'}
 - type: FlowPanel
   properties: {}
   name: navbar_links
