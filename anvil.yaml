@@ -78,7 +78,7 @@ db_schema:
       admin_ui: {width: 200}
       type: string
     - name: session
-      admin_ui: {width: 200, order: 9}
+      admin_ui: {order: 9, width: 250}
       type: link_single
       target: sessions
   sessions:

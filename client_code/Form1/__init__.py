@@ -34,6 +34,10 @@ class Form1(Form1Template):
       resultado = anvil.server.call('processar_bibtex_e_armazenar', self.loaded_file)
       # Exibe uma mensagem de confirmação
       alert(resultado)
+      # Atualiza o repeating panel com os novos dados processados
+      self.preencher_data_grid()  # Ou self.mostrar_dados(), dependendo da função que você está usando.
+      # Torna o Data Grid visível
+      self.data_grid.visible = True
     else:
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
 

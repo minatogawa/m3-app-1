@@ -25,6 +25,7 @@ components:
       - {id: VJQQOR, title: Title, data_key: '"title"'}
       - {id: OJLQEN, title: Year, data_key: '"year"'}
       - {id: QJMMCM, data_key: '"doi"', title: DOI}
+      visible: false
     type: DataGrid
     components:
     - name: repeating_panel_1
@@ -32,7 +33,6 @@ components:
       type: RepeatingPanel
       data_bindings:
       - {property: items, code: 'self.item['''']', writeback: false}
-      - {property: item_template, code: 'self.item['''']', writeback: false}
     layout_properties: {grid_position: 'LSQKLQ,DOGZHN'}
 - type: FlowPanel
   properties: {}
