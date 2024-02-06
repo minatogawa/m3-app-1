@@ -79,20 +79,47 @@ class Form1(Form1Template):
         self.plot_1.layout = fig.layout
 
   def desenhar_grafico_top_journals(self):
-        top_journals = anvil.server.call('top_journals_ultima_sessao')
-        
-        # Cria as coordenadas X e Y para o gráfico
-        nomes_journals = [journal for journal, _ in top_journals]
-        contagem_papers = [contagem for _, contagem in top_journals]
-        
-        # Cria o gráfico de barras
-        data = [go.Bar(x=nomes_journals, y=contagem_papers)]
-        layout = go.Layout(title='Top 10 Journals com Mais Publicações', xaxis={'title': 'Journal'}, yaxis={'title': 'Número de Publicações'})
-        fig = go.Figure(data=data, layout=layout)
+    top_journals = anvil.server.call('top_journals_ultima_sessao')
 
-        # Exibe o gráfico no componente Plot
-        self.plot_2.data = fig.data
-        self.plot_2.layout = fig.layout
+    # Define uma lista de cores para as barras
+    cores_barras = [
+        'rgba(255, 99, 132, 0.5)',  # Por exemplo, um tom de vermelho com transparência
+        'rgba(54, 162, 235, 0.5)',  # Azul
+        'rgba(255, 206, 86, 0.5)',  # Amarelo
+        # ... Adicione mais cores conforme necessário
+    ]
+
+    # Certifique-se de que temos cores suficientes para todas as barras
+    cores_barras = cores_barras * (len(top_journals) // len(cores_barras) + 1)
+
+    # Cria as coordenadas X e Y para o gráfico
+    nomes_journals = [journal.replace(' ', '<br>') for journal, _ in top_journals]
+    contagem_papers = [contagem for _, contagem in top_journals]
+
+    # Cria o gráfico de barras com cores personalizadas
+    data = [go.Bar(
+        x=nomes_journals,
+        y=contagem_papers,
+        marker=dict(color=cores_barras[:len(top_journals)])  # Aplica as cores às barras
+    )]
+    
+    layout = go.Layout(
+        title='Top 10 Journals com Mais Publicações',
+        xaxis={
+            'title': 'Journal',
+            'tickangle': 0,  # Sem inclinação
+            'tickmode': 'array',
+            'tickvals': list(range(len(nomes_journals))),
+            'ticktext': nomes_journals  # Rótulos personalizados com quebra de linha
+        },
+        yaxis={'title': 'Número de Publicações'},
+        margin={'l': 50, 'r': 50, 't': 50, 'b': 100},  # Ajusta as margens
+    )
+    fig = go.Figure(data=data, layout=layout)
+
+    # Exibe o gráfico no componente Plot
+    self.plot_2.data = fig.data
+    self.plot_2.layout = fig.layout
 
 
   def desenhar_streamgraph_keywords(self):
