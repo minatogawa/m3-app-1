@@ -9,6 +9,7 @@ import anvil.server
 import plotly.graph_objs as go
 
 
+
 class Form1(Form1Template):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
@@ -45,12 +46,13 @@ class Form1(Form1Template):
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
     self.desenhar_grafico()
     self.desenhar_grafico_top_journals()
+    self.desenhar_streamgraph_keywords()
 
 
   def mostrar_dados(self):
     dados = anvil.server.call('buscar_dados')
     self.data_grid.items = dados  # Atualiza o Data Grid com os dados recebidos
-
+    
   def preencher_data_grid(self):
     try:
         # Chama a função do servidor para buscar os dados da última sessão
@@ -91,3 +93,41 @@ class Form1(Form1Template):
         # Exibe o gráfico no componente Plot
         self.plot_2.data = fig.data
         self.plot_2.layout = fig.layout
+
+
+  def desenhar_streamgraph_keywords(self):
+    # Chama a função do backend para obter os dados
+    dados_keywords = anvil.server.call('dados_keywords_por_ano')
+
+    # Assume que os dados vêm com as top 10 palavras-chave
+    years = [dado['year'] for dado in dados_keywords]
+    series = {keyword: [] for keyword in dados_keywords[0].keys() if keyword != 'year'}
+
+    for dado in dados_keywords:
+        for keyword, value in dado.items():
+            if keyword != 'year':
+                series[keyword].append(value)
+
+    # Agora temos os dados prontos para serem adicionados ao gráfico
+    data = []
+    for keyword, values in series.items():
+        data.append(go.Scatter(
+            x=years,
+            y=values,
+            mode='lines',
+            stackgroup='one',
+            name=keyword
+        ))
+
+    # Cria e configura o gráfico
+    fig = go.Figure(data=data)
+    fig.update_layout(
+        title='Evolução das Palavras-Chave ao Longo dos Anos - Top 10',
+        xaxis_title='Ano',
+        yaxis_title='Frequência',
+        showlegend=True
+    )
+
+    # Exibe o gráfico no componente Plot
+    self.plot_3.data = fig.data
+    self.plot_3.layout = fig.layout

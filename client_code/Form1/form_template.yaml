@@ -56,6 +56,10 @@ components:
     properties: {height: 401.5}
     type: Plot
     layout_properties: {grid_position: 'UFBHDP,NOIIOX'}
+  - name: plot_3
+    properties: {}
+    type: Plot
+    layout_properties: {grid_position: 'YXKCNX,XCCAJX'}
 - type: FlowPanel
   properties: {}
   name: navbar_links
