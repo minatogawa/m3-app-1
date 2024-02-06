@@ -9,12 +9,14 @@ components:
   layout_properties: {slot: default}
   components:
   - name: file_loader_1
-    properties: {file_types: '[".bib"]'}
+    properties: {file_types: '[".bib"]', role: filled-button, bold: false, font: bebas neue,
+      font_size: 32}
     type: FileLoader
     layout_properties: {grid_position: 'PDXLQB,MSDTOK'}
     event_bindings: {change: file_loader_1_change}
+    data_bindings: []
   - name: process_archive
-    properties: {text: Processar Arquivo, enabled: true, visible: false}
+    properties: {text: Processar Arquivo, enabled: true, visible: false, role: tonal-button}
     type: Button
     layout_properties: {grid_position: 'MUYSTY,ZUPKFC'}
     event_bindings: {click: process_archive_click}
@@ -60,7 +62,7 @@ components:
   layout_properties: {slot: nav-right}
   components:
   - name: button_logout
-    properties: {text: LOGOUT, icon: 'fa:sign-out'}
+    properties: {text: LOGOUT, icon: 'fa:sign-out', role: null, font_size: null, font: ''}
     type: Button
     layout_properties: {}
     event_bindings: {click: button_logout_click}
