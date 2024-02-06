@@ -115,6 +115,7 @@ class Form1(Form1Template):
             x=years,
             y=values,
             mode='lines',
+            line=dict(shape='spline', smoothing=1.3),
             stackgroup='one',
             name=keyword
         ))
