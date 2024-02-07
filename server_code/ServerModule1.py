@@ -45,34 +45,28 @@ def processar_bibtex_e_armazenar(blob_media):
 
 @anvil.server.callable
 def buscar_dados_da_ultima_sessao():
-    print("Iniciando a busca de dados da última sessão")
-    usuario_atual = anvil.users.get_user()
-    
-    # Encontra a última sessão ordenando por 'upload_date' e pegando a primeira
-    ultima_sessao = app_tables.sessions.search(
-        tables.order_by("upload_date", ascending=False),
-        user=usuario_atual
-    )[0]
-    
-    # Busca entradas associadas à última sessão
-    entradas_da_ultima_sessao = app_tables.bib_data.search(
-        session=ultima_sessao
-    )
-    
-    # Converte as entradas em dicionários para passar ao front end
-    dados = [{
-        'author': entrada['author'],
-        'title': entrada['title'],
-        'year': entrada['year'],
-        'journal': entrada['journal'],
-        'doi': entrada['doi'],
-        'keywords': entrada['keywords'],
-        'correspondence_address': entrada['correspondence_address'],
-        'publisher': entrada['publisher']
-    } for entrada in entradas_da_ultima_sessao]
-    
-    return dados
+    try:
+        usuario_atual = anvil.users.get_user()
+        ultima_sessao = app_tables.sessions.search(
+            tables.order_by("upload_date", ascending=False),
+            user=usuario_atual
+        )[0]  # Pode lançar IndexError se não houver sessões
 
+        entradas_da_ultima_sessao = app_tables.bib_data.search(session=ultima_sessao)
+        dados = [{
+            'author': entrada['author'],
+            'title': entrada['title'],
+            'year': entrada['year'],
+            'journal': entrada['journal'],
+            'doi': entrada['doi'],
+            'keywords': entrada['keywords'],
+            'correspondence_address': entrada.get('correspondence_address', None),  # Use .get() para campos opcionais
+            'publisher': entrada['publisher']
+            # Inclua outros campos conforme necessário
+        } for entrada in entradas_da_ultima_sessao]
+        return dados
+    except IndexError:
+        return []  # Retorna lista vazia se não houver sessões
 
 @anvil.server.callable
 def dados_papers_ultima_sessao_por_ano():
