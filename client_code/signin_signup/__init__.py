@@ -6,8 +6,6 @@ from anvil.tables import app_tables
 import anvil.users
 import anvil.server
 
-
-
 class signin_signup(signin_signupTemplate):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
