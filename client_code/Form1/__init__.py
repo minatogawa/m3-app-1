@@ -62,71 +62,44 @@ class Form1(Form1Template):
     except Exception as e:
         print(e)  # Isso imprimirá o erro no console de execução
 
+  def desenhar_grafico_generico(self, dados, layout, plot_component):
+    fig = go.Figure(data=dados, layout=layout)
+    plot_component.data = fig.data
+    plot_component.layout = fig.layout
+
+  # Exemplo de como usar a função genérica
   def desenhar_grafico(self):
-        dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
-
-        # Cria as coordenadas X e Y para o gráfico
-        anos = [ano for ano, _ in dados_grafico]
-        contagem_papers = [contagem for _, contagem in dados_grafico]
-        
-        # Cria o gráfico
-        data = [go.Bar(x=anos, y=contagem_papers)]
-        layout = go.Layout(title='Papers published per year')
-        fig = go.Figure(data=data, layout=layout)
-
-        # Exibe o gráfico no Plot component
-        self.plot_1.data = fig.data
-        self.plot_1.layout = fig.layout
+    dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
+    anos = [ano for ano, _ in dados_grafico]
+    contagem_papers = [contagem for _, contagem in dados_grafico]
+    data = [go.Bar(x=anos, y=contagem_papers)]
+    layout = go.Layout(title='Papers published per year')
+    self.desenhar_grafico_generico(data, layout, self.plot_1)
 
   def desenhar_grafico_top_journals(self):
     top_journals = anvil.server.call('top_journals_ultima_sessao')
 
-    # Define uma lista de cores para as barras
-    cores_barras = [
-        'rgba(255, 99, 132, 0.5)',  # Por exemplo, um tom de vermelho com transparência
-        'rgba(54, 162, 235, 0.5)',  # Azul
-        'rgba(255, 206, 86, 0.5)',  # Amarelo
-        # ... Adicione mais cores conforme necessário
-    ]
+    cores_barras = ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)']
+    cores_barras *= (len(top_journals) // len(cores_barras) + 1)
 
-    # Certifique-se de que temos cores suficientes para todas as barras
-    cores_barras = cores_barras * (len(top_journals) // len(cores_barras) + 1)
-
-    # Cria as coordenadas X e Y para o gráfico
     nomes_journals = [journal.replace(' ', '<br>') for journal, _ in top_journals]
     contagem_papers = [contagem for _, contagem in top_journals]
 
-    # Cria o gráfico de barras com cores personalizadas
-    data = [go.Bar(
-        x=nomes_journals,
-        y=contagem_papers,
-        marker=dict(color=cores_barras[:len(top_journals)])  # Aplica as cores às barras
-    )]
-    
+    data = [go.Bar(x=nomes_journals, y=contagem_papers, marker=dict(color=cores_barras[:len(top_journals)]))]
+
     layout = go.Layout(
         title='Top 10 Journals com Mais Publicações',
-        xaxis={
-            'title': 'Journal',
-            'tickangle': 0,  # Sem inclinação
-            'tickmode': 'array',
-            'tickvals': list(range(len(nomes_journals))),
-            'ticktext': nomes_journals  # Rótulos personalizados com quebra de linha
-        },
-        yaxis={'title': 'Número de Publicações'},
-        margin={'l': 50, 'r': 50, 't': 50, 'b': 100},  # Ajusta as margens
+        xaxis=dict(title='Journal', tickangle=0, tickmode='array', tickvals=list(range(len(nomes_journals))), ticktext=nomes_journals),
+        yaxis=dict(title='Número de Publicações'),
+        margin=dict(l=50, r=50, t=50, b=100)
     )
-    fig = go.Figure(data=data, layout=layout)
 
-    # Exibe o gráfico no componente Plot
-    self.plot_2.data = fig.data
-    self.plot_2.layout = fig.layout
+    self.desenhar_grafico_generico(data, layout, self.plot_2)
 
 
   def desenhar_streamgraph_keywords(self):
-    # Chama a função do backend para obter os dados
     dados_keywords = anvil.server.call('dados_keywords_por_ano')
 
-    # Assume que os dados vêm com as top 10 palavras-chave
     years = [dado['year'] for dado in dados_keywords]
     series = {keyword: [] for keyword in dados_keywords[0].keys() if keyword != 'year'}
 
@@ -135,27 +108,13 @@ class Form1(Form1Template):
             if keyword != 'year':
                 series[keyword].append(value)
 
-    # Agora temos os dados prontos para serem adicionados ao gráfico
-    data = []
-    for keyword, values in series.items():
-        data.append(go.Scatter(
-            x=years,
-            y=values,
-            mode='lines',
-            line=dict(shape='spline', smoothing=1.3),
-            stackgroup='one',
-            name=keyword
-        ))
+    data = [go.Scatter(x=years, y=values, mode='lines', line=dict(shape='spline', smoothing=1.3), stackgroup='one', name=keyword) for keyword, values in series.items()]
 
-    # Cria e configura o gráfico
-    fig = go.Figure(data=data)
-    fig.update_layout(
+    layout = go.Layout(
         title='Evolução das Palavras-Chave ao Longo dos Anos - Top 10',
         xaxis_title='Ano',
         yaxis_title='Frequência',
         showlegend=True
     )
 
-    # Exibe o gráfico no componente Plot
-    self.plot_3.data = fig.data
-    self.plot_3.layout = fig.layout
+    self.desenhar_grafico_generico(data, layout, self.plot_3)
