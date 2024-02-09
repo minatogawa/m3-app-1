@@ -1,7 +1,8 @@
+properties: []
 is_package: true
-container:
-  type: HtmlTemplate
-  properties: {html: '@theme:standard-page.html'}
+events:
+- {name: event, default_event: true}
+custom_component: true
 components:
 - type: ColumnPanel
   properties: {}
@@ -20,3 +21,6 @@ components:
   properties: {}
   name: navbar_links
   layout_properties: {slot: nav-right}
+container:
+  type: HtmlTemplate
+  properties: {html: '@theme:standard-page.html'}

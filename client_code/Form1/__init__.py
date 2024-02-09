@@ -44,7 +44,7 @@ class Form1(Form1Template):
       self.data_grid.visible = True
     else:
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
-    self.desenhar_grafico()
+
     self.desenhar_grafico_top_journals()
     self.desenhar_streamgraph_keywords()
 
