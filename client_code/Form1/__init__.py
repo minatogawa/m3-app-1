@@ -98,12 +98,12 @@ class Form1(Form1Template):
 
 
   def desenhar_streamgraph_keywords(self):
-    dados_keywords = anvil.server.call('dados_keywords_por_ano')
+    dados_keywords_agregados = anvil.server.call('dados_keywords_por_ano_agregados')
 
-    years = [dado['year'] for dado in dados_keywords]
-    series = {keyword: [] for keyword in dados_keywords[0].keys() if keyword != 'year'}
+    years = [dado['year'] for dado in dados_keywords_agregados]
+    series = {keyword: [] for keyword in dados_keywords_agregados[0].keys() if keyword != 'year'}
 
-    for dado in dados_keywords:
+    for dado in dados_keywords_agregados:
         for keyword, value in dado.items():
             if keyword != 'year':
                 series[keyword].append(value)

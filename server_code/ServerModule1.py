@@ -120,35 +120,31 @@ def top_journals_ultima_sessao():
 
 
 @anvil.server.callable
-def dados_keywords_por_ano():
-    # Busca todas as entradas na tabela bib_data
+def dados_keywords_por_ano_agregados():
     entradas = app_tables.bib_data.search(tables.order_by("year", ascending=True))
+    contador_keywords_por_ano = {}
 
-    # Inicializa um contador para todas as palavras-chave
-    contador_keywords = Counter()
-
-    # Conta a frequência de cada palavra-chave
-    for entrada in entradas:
-        if entrada['keywords']:
-            keywords = entrada['keywords'].split(';')
-            contador_keywords.update([keyword.strip() for keyword in keywords if keyword])
-
-    # Seleciona as top 10 palavras-chave mais frequentes
-    top_keywords = [keyword for keyword, count in contador_keywords.most_common(10)]
-
-    # Inicializa o dicionário de dados para o streamgraph
-    dados_stream = {ano: {kw: 0 for kw in top_keywords} for ano in sorted(set(entrada['year'] for entrada in entradas))}
-
-    # Conta as palavras-chave apenas se estiverem no top 10
+    # Inicializa os contadores por ano para as top 10 palavras-chave
     for entrada in entradas:
         ano = entrada['year']
         if ano and entrada['keywords']:
-            for keyword in entrada['keywords'].split(';'):
-                keyword = keyword.strip()
-                if keyword in top_keywords:
-                    dados_stream[ano][keyword] += 1
+            keywords = entrada['keywords'].split(';')
+            if ano not in contador_keywords_por_ano:
+                contador_keywords_por_ano[ano] = Counter()
+            contador_keywords_por_ano[ano].update([keyword.strip() for keyword in keywords if keyword])
 
-    # Prepara os dados para o streamgraph
-    stream_data = [{'year': ano, **counts} for ano, counts in dados_stream.items()]
+    # Preparando a lista das top 10 palavras-chave globais
+    contador_global = Counter()
+    for contador in contador_keywords_por_ano.values():
+        contador_global.update(contador)
+    top_keywords = [kw for kw, _ in contador_global.most_common(10)]
 
-    return stream_data
+    # Preparando dados finais agregados
+    dados_agregados = []
+    for ano, contador in contador_keywords_por_ano.items():
+        dados_ano = {'year': ano}
+        for kw in top_keywords:
+            dados_ano[kw] = contador[kw]
+        dados_agregados.append(dados_ano)
+
+    return dados_agregados

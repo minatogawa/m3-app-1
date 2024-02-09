@@ -37,7 +37,7 @@ components:
         - {id: OJLQEN, title: Year, data_key: '"year"', width: 81, expand: false}
         - {id: QJMMCM, data_key: '"doi"', title: DOI}
         visible: false
-        rows_per_page: 2
+        rows_per_page: 5
         role: elevated-card
       type: DataGrid
       components:
@@ -48,6 +48,25 @@ components:
         - {property: items, code: 'self.item['''']', writeback: false}
       layout_properties: {width: 968}
       data_bindings: []
+  - name: spacer_2
+    properties: {height: 32}
+    type: Spacer
+    layout_properties: {grid_position: 'SFQMMC,EAMUOQ'}
+  - name: button_1
+    properties: {text: Papers per Year, icon: 'fa:bar-chart', role: filled-button,
+      font: bebas neue, font_size: 32}
+    type: Button
+    layout_properties: {grid_position: 'IILCXJ,ZECQRV'}
+  - name: button_1_copy
+    properties: {text: TOP Journals, icon: 'fa:bar-chart-o', role: filled-button,
+      font: bebas neue, font_size: 32}
+    type: Button
+    layout_properties: {grid_position: 'IILCXJ,MONYMG'}
+  - name: button_1_copy_2
+    properties: {text: keyword evolution, icon: 'fa:area-chart', role: filled-button,
+      font: bebas neue, font_size: 32}
+    type: Button
+    layout_properties: {grid_position: 'IILCXJ,DSZDCK'}
   - name: flow_panel_1
     properties: {}
     type: FlowPanel
