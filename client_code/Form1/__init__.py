@@ -44,7 +44,7 @@ class Form1(Form1Template):
       self.data_grid.visible = True
     else:
       alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
-    self.desenhar_grafico()
+    # self.desenhar_grafico()
     self.desenhar_grafico_top_journals()
     self.desenhar_streamgraph_keywords()
 
@@ -62,19 +62,23 @@ class Form1(Form1Template):
     except Exception as e:
         print(e)  # Isso imprimirá o erro no console de execução
 
+  def plot_papers_per_year_click(self, **event_args):
+    # Abrir o formulário papers_per_year quando o botão é clicado
+    anvil.open_form('papers_per_year')
+  
   def desenhar_grafico_generico(self, dados, layout, plot_component):
     fig = go.Figure(data=dados, layout=layout)
     plot_component.data = fig.data
     plot_component.layout = fig.layout
-
+  
   # Exemplo de como usar a função genérica
-  def desenhar_grafico(self):
-    dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
-    anos = [ano for ano, _ in dados_grafico]
-    contagem_papers = [contagem for _, contagem in dados_grafico]
-    data = [go.Bar(x=anos, y=contagem_papers)]
-    layout = go.Layout(title='Papers published per year')
-    self.desenhar_grafico_generico(data, layout, self.plot_1)
+  # def desenhar_grafico(self):
+  #   dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
+  #   anos = [ano for ano, _ in dados_grafico]
+  #   contagem_papers = [contagem for _, contagem in dados_grafico]
+  #   data = [go.Bar(x=anos, y=contagem_papers)]
+  #   layout = go.Layout(title='Papers published per year')
+  #   self.desenhar_grafico_generico(data, layout, self.plot_1)
 
   def desenhar_grafico_top_journals(self):
     top_journals = anvil.server.call('top_journals_ultima_sessao')
@@ -118,3 +122,10 @@ class Form1(Form1Template):
     )
 
     self.desenhar_grafico_generico(data, layout, self.plot_3)
+
+
+
+  
+
+
+ 
