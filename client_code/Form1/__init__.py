@@ -118,3 +118,7 @@ class Form1(Form1Template):
     )
 
     self.desenhar_grafico_generico(data, layout, self.plot_3)
+
+  def paper_per_year_graph_click(self, **event_args):
+    # Abrir o formulário papers_per_year quando o botão é clicado
+    anvil.open_form('papers_per_year')

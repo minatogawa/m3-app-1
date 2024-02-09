@@ -52,11 +52,12 @@ components:
     properties: {height: 32}
     type: Spacer
     layout_properties: {grid_position: 'SFQMMC,EAMUOQ'}
-  - name: button_1
+  - name: paper_per_year_graph
     properties: {text: Papers per Year, icon: 'fa:bar-chart', role: filled-button,
       font: bebas neue, font_size: 32}
     type: Button
     layout_properties: {grid_position: 'IILCXJ,ZECQRV'}
+    event_bindings: {click: paper_per_year_graph_click}
   - name: button_1_copy
     properties: {text: TOP Journals, icon: 'fa:bar-chart-o', role: filled-button,
       font: bebas neue, font_size: 32}
