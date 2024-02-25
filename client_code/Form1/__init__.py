@@ -118,3 +118,7 @@ class Form1(Form1Template):
     )
 
     self.desenhar_grafico_generico(data, layout, self.plot_3)
+
+  def button_publicacoes_por_ano_click(self, **event_args):
+      dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
+      anvil.open_form('FormGraficoPublicacoesPorAno', dados_grafico=dados_grafico)
