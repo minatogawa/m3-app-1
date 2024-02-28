@@ -66,7 +66,9 @@ class Form1(Form1Template):
 
   def button_publicacoes_por_ano_click(self, **event_args):
       dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
-      anvil.open_form('FormGraficoPublicacoesPorAno', dados_grafico=dados_grafico)
+      url_do_grafico = "https://suaapp.anvil.app/FormGraficoPublicacoesPorAno"
+      open_external_link(url_do_grafico)
+      # anvil.open_form('FormGraficoPublicacoesPorAno', dados_grafico=dados_grafico)
 
   def button_top_journals_click(self, **event_args):
     dados_grafico = anvil.server.call('top_journals_ultima_sessao')
