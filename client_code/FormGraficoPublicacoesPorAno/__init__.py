@@ -36,3 +36,6 @@ class FormGraficoPublicacoesPorAno(FormGraficoPublicacoesPorAnoTemplate):
         # Supondo que você tenha um componente Plot na sua interface chamado 'plot_area'
         self.plot_area.data = fig.data
         self.plot_area.layout = fig.layout
+
+    def button_3_click(self, **event_args):
+      open_form('Form1')

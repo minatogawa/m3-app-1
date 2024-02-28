@@ -152,3 +152,33 @@ def dados_keywords_por_ano():
     stream_data = [{'year': ano, **counts} for ano, counts in dados_stream.items()]
 
     return stream_data
+
+@anvil.server.callable
+def buscar_dados_da_ultima_sessao():
+    usuario_atual = anvil.users.get_user()
+    
+    # Encontra a última sessão do usuário ordenando por 'upload_date'
+    ultima_sessao = app_tables.sessions.search(
+        tables.order_by("upload_date", ascending=False),
+        user=usuario_atual
+    )[0]
+    
+    # Busca entradas associadas à última sessão
+    entradas_da_ultima_sessao = app_tables.bib_data.search(session=ultima_sessao)
+    
+    # Converte as entradas em dicionários para passar ao front end
+    dados = [{
+        'author': entrada['author'],
+        'title': entrada['title'],
+        'year': entrada['year'],
+        'journal': entrada['journal'],
+        'doi': entrada['doi'],
+        'keywords': entrada['keywords'],
+        'correspondence_address': entrada['correspondence_address'],
+        'publisher': entrada['publisher']
+    } for entrada in entradas_da_ultima_sessao]
+
+    dados = [{...} for entrada in entradas_da_ultima_sessao]
+    
+    print(dados)  # Para debugar e verificar a estrutura de dados
+    return dados

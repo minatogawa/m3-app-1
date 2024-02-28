@@ -9,11 +9,18 @@ import anvil.server
 
 class Form1(Form1Template):
   def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
-    self.init_components(**properties)
-    # Any code you write here will run before the form opens.
-    # Preenche o Data Grid com dados
-    self.preencher_data_grid()
+      self.init_components(**properties)
+      
+      # Chama a função para preencher o Data Grid com dados da última sessão do usuário
+      self.preencher_data_grid()
+
+  def preencher_data_grid(self):
+    dados = anvil.server.call('buscar_dados_da_ultima_sessao')
+    if dados:  # Verifica se há dados para evitar erros
+        self.repeating_panel_1.items = dados
+    else:
+        print("Nenhum dado encontrado para a última sessão.")
+        
 
   def button_logout_click(self, **event_args):
     # Encerra a sessão do usuário atual

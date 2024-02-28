@@ -16,3 +16,9 @@ components:
   properties: {}
   name: navbar_links
   layout_properties: {slot: nav-right}
+  components:
+  - name: button_3
+    properties: {text: button_3}
+    type: Button
+    event_bindings: {click: button_3_click}
+    layout_properties: {}
