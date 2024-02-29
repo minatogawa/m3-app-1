@@ -7,6 +7,9 @@ from anvil.tables import app_tables
 import anvil.users
 import anvil.server
 
+# No início do seu módulo do cliente, fora de qualquer classe
+dados_globais = None
+
 class Form1(Form1Template):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
@@ -54,13 +57,14 @@ class Form1(Form1Template):
     self.data_grid.items = dados  # Atualiza o Data Grid com os dados recebidos
     
   def preencher_data_grid(self):
-    try:
-        # Chama a função do servidor para buscar os dados da última sessão
-        dados = anvil.server.call('buscar_dados_da_ultima_sessao')
-        # Atualiza os itens do Data Grid diretamente com os dados
-        self.repeating_panel_1.items = dados
-    except Exception as e:
-        print(e)  # Isso imprimirá o erro no console de execução
+    global dados_globais  # Referencia a variável global
+    if dados_globais is None:  # Se os dados ainda não foram carregados
+        try:
+            dados_globais = anvil.server.call('buscar_dados_da_ultima_sessao')
+        except Exception as e:
+            print(e)  # Trata o erro conforme necessário
+    # Usa os dados da variável global para preencher o Data Grid
+    self.repeating_panel_1.items = dados_globais if dados_globais else []
 
 #################################################################################################
 
