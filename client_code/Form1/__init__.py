@@ -1,59 +1,63 @@
 from ._anvil_designer import Form1Template
+# Import Anvil's core functionalities for UI, server calls, and data handling.
 from anvil import *
+# Import Plotly's graph_objects for creating complex and interactive charts.
 import plotly.graph_objects as go
+# Import Anvil's table functionalities for database operations.
 import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
+# Import Anvil's user authentication module for handling user sessions.
 import anvil.users
+# Import Anvil's server module to enable server-side operations.
 import anvil.server
-import plotly.graph_objs as go
 
-
-
+# Define the class Form1, inheriting from Form1Template.
+# This inheritance includes the UI design from the Anvil Designer.
 class Form1(Form1Template):
+  # Constructor method for the class.
   def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
-    self.init_components(**properties)
-    # Any code you write here will run before the form opens.
-    # Preenche o Data Grid com dados
-    self.preencher_data_grid()
+      # Initialize form components with properties. 
+      # This includes setting up UI elements according to the Anvil Designer's specifications.
+      self.init_components(**properties)
+      
+      # Code placed here runs before the form is shown to the user.
+      # Call the method to fill the Data Grid with data.
+      # This prepares the data presentation as soon as the form loads.
+      self.fill_data_grid()
 
   def button_logout_click(self, **event_args):
-    # Encerra a sessão do usuário atual
+    # Logs out the current user session.
     anvil.users.logout()
-    
-    # Redireciona o usuário de volta ao Form1 (tela de login)
+    # Redirects the user back to the signin/signup form.
     anvil.open_form('signin_signup')
 
   def file_loader_1_change(self, file, **event_args):
-    # Salva o arquivo carregado em uma variável de instância para uso posterior
+    # Saves the uploaded file in an instance variable for later use.
     self.loaded_file = file
-    # Torna o botão de processamento visível
+    # Makes the processing button visible.
     self.process_archive.visible = True
 
-  # No evento de clique do botão (para processar o arquivo .bib)
   def process_archive_click(self, **event_args):
+    # Check if a file has been loaded.
     if self.loaded_file:
-      # Chama a função do servidor para processar e armazenar os dados do arquivo .bib
-      resultado = anvil.server.call('processar_bibtex_e_armazenar', self.loaded_file)
-      # Exibe uma mensagem de confirmação
-      alert(resultado)
-      # Atualiza o repeating panel com os novos dados processados
-      self.preencher_data_grid()  # Ou self.mostrar_dados(), dependendo da função que você está usando.
-      # Torna o Data Grid visível
-      self.data_grid.visible = True
+        # Calls the server function to process and store the data from the .bib file.
+        result = anvil.server.call('process_bibtex_and_store', self.loaded_file)
+        # Displays a confirmation message with the result.
+        alert(result)
+        # Updates the repeating panel with the new processed data.
+        self.fill_data_grid()
+        # Makes the Data Grid visible to show the updated data.
+        self.data_grid.visible = True
     else:
-      alert("Nenhum arquivo foi carregado. Por favor, carregue um arquivo .bib para processar.")
-    self.desenhar_grafico()
-    self.desenhar_grafico_top_journals()
-    self.desenhar_streamgraph_keywords()
-
-
-  def mostrar_dados(self):
-    dados = anvil.server.call('buscar_dados')
-    self.data_grid.items = dados  # Atualiza o Data Grid com os dados recebidos
-    
-  def preencher_data_grid(self):
+        # Alerts the user if no file has been uploaded.
+        alert("No file has been loaded. Please upload a .bib file to process.")
+    # Draw the charts
+    self.draw_papers_per_year()
+    self.draw_top_journals_chart()
+    self.draw_keywords_streamgraph()
+   
+  def fill_data_grid(self):
     try:
         # Chama a função do servidor para buscar os dados da última sessão
         dados = anvil.server.call('buscar_dados_da_ultima_sessao')
@@ -68,7 +72,7 @@ class Form1(Form1Template):
     plot_component.layout = fig.layout
 
   # Exemplo de como usar a função genérica
-  def desenhar_grafico(self):
+  def draw_papers_per_year(self):
     dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
     anos = [ano for ano, _ in dados_grafico]
     contagem_papers = [contagem for _, contagem in dados_grafico]
@@ -76,7 +80,7 @@ class Form1(Form1Template):
     layout = go.Layout(title='Papers published per year')
     self.desenhar_grafico_generico(data, layout, self.plot_1)
 
-  def desenhar_grafico_top_journals(self):
+  def draw_top_journals_chart(self):
     top_journals = anvil.server.call('top_journals_ultima_sessao')
 
     cores_barras = ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)']
@@ -97,7 +101,7 @@ class Form1(Form1Template):
     self.desenhar_grafico_generico(data, layout, self.plot_2)
 
 
-  def desenhar_streamgraph_keywords(self):
+  def draw_keywords_streamgraph(self):
     dados_keywords = anvil.server.call('dados_keywords_por_ano')
 
     years = [dado['year'] for dado in dados_keywords]

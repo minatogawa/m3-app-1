@@ -9,7 +9,7 @@ from datetime import datetime
 from collections import Counter
 
 @anvil.server.callable
-def processar_bibtex_e_armazenar(blob_media):
+def process_bibtex_and_store(blob_media):
     usuario_atual = anvil.users.get_user()
 
     # Cria uma nova sessão para este upload
