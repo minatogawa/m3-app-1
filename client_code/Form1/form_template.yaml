@@ -15,11 +15,11 @@ components:
     layout_properties: {grid_position: 'PDXLQB,MSDTOK'}
     event_bindings: {change: file_loader_1_change}
     data_bindings: []
-  - name: process_archive
-    properties: {text: Processar Arquivo, enabled: true, visible: false, role: tonal-button}
+  - name: process_file_button
+    properties: {text: Processar Arquivo, enabled: true, visible: true, role: tonal-button}
     type: Button
     layout_properties: {grid_position: 'MUYSTY,ZUPKFC'}
-    event_bindings: {click: process_archive_click}
+    event_bindings: {click: process_file_button_click}
   - name: spacer_1
     properties: {height: 71.33331298828125}
     type: Spacer
