@@ -85,3 +85,7 @@ components:
     type: Button
     layout_properties: {}
     event_bindings: {click: button_logout_click}
+- name: button_1
+  properties: {text: button_1, role: outlined-button}
+  type: Button
+  layout_properties: {slot: left-nav}
