@@ -8,147 +8,163 @@ import io
 from datetime import datetime
 from collections import Counter
 
+################################################################################################
+
 @anvil.server.callable
 def process_bibtex_and_store(blob_media):
-    usuario_atual = anvil.users.get_user()
+    # Retrieves the current user.
+    current_user = anvil.users.get_user()
 
-    # Cria uma nova sessão para este upload
-    nova_sessao = app_tables.sessions.add_row(
-        user=usuario_atual,
-        upload_date=datetime.now()  # Obtém a data e hora atual
+    # Creates a new session for this upload.
+    new_session = app_tables.sessions.add_row(
+        user=current_user,
+        upload_date=datetime.now()  # Gets the current date and time.
     )
 
-    # Lê o arquivo como uma string
+    # Reads the file as a string.
     bibtex_str = blob_media.get_bytes().decode()
-    # Usa bibtexparser.loads para processar a string BibTeX
+    # Uses bibtexparser.parse_string to process the BibTeX string.
     bibtex_database = bibtexparser.parse_string(bibtex_str)
 
-    # Processa e armazena cada entrada no arquivo BibTeX
-    for entrada in bibtex_database.entries:
-        entrada_dict = {chave: str(valor) if valor else None for chave, valor in entrada.items()}
+    # Processes and stores each entry in the BibTeX file.
+    for entry in bibtex_database.entries:
+        entry_dict = {key: str(value) if value else None for key, value in entry.items()}
         
         app_tables.bib_data.add_row(
-            session=nova_sessao,
-            author=entrada_dict.get('author', None),
-            title=entrada_dict.get('title', None),
-            year=entrada_dict.get('year', None),
-            journal=entrada_dict.get('journal', None),
-            doi=entrada_dict.get('doi', None),
-            keywords=entrada_dict.get('keywords', None),
-            correspondence_address=entrada_dict.get('address', None),  # Se 'address' for o campo correto
-            publisher=entrada_dict.get('publisher', None)
-            # Adicione quaisquer outros campos conforme necessário
+            session=new_session,
+            author=entry_dict.get('author', None),
+            title=entry_dict.get('title', None),
+            year=entry_dict.get('year', None),
+            journal=entry_dict.get('journal', None),
+            doi=entry_dict.get('doi', None),
+            keywords=entry_dict.get('keywords', None),
+            correspondence_address=entry_dict.get('address', None),  # If 'address' is the correct field.
+            publisher=entry_dict.get('publisher', None)
+            # Add any other fields as necessary.
         )
 
-    # Retorna uma mensagem de confirmação
-    return f"Dados processados e armazenados com sucesso para a sessão."
+    # Returns a confirmation message.
+    return "Data processed and stored successfully for the session."
+
+########################################################################################################################
 
 @anvil.server.callable
 def fetch_data_from_last_session():
-    print("Iniciando a busca de dados da última sessão")
-    usuario_atual = anvil.users.get_user()
+    print("Starting to fetch data from the last session")
+    current_user = anvil.users.get_user()
     
-    # Encontra a última sessão ordenando por 'upload_date' e pegando a primeira
-    ultima_sessao = app_tables.sessions.search(
+    # Finds the last session by ordering by 'upload_date' and taking the first one.
+    last_session = app_tables.sessions.search(
         tables.order_by("upload_date", ascending=False),
-        user=usuario_atual
+        user=current_user
     )[0]
     
-    # Busca entradas associadas à última sessão
-    entradas_da_ultima_sessao = app_tables.bib_data.search(
-        session=ultima_sessao
+    # Searches for entries associated with the last session.
+    entries_from_last_session = app_tables.bib_data.search(
+        session=last_session
     )
     
-    # Converte as entradas em dicionários para passar ao front end
-    dados = [{
-        'author': entrada['author'],
-        'title': entrada['title'],
-        'year': entrada['year'],
-        'journal': entrada['journal'],
-        'doi': entrada['doi'],
-        'keywords': entrada['keywords'],
-        'correspondence_address': entrada['correspondence_address'],
-        'publisher': entrada['publisher']
-    } for entrada in entradas_da_ultima_sessao]
+    # Converts the entries into dictionaries to pass to the front end.
+    data = [{
+        'author': entry['author'],
+        'title': entry['title'],
+        'year': entry['year'],
+        'journal': entry['journal'],
+        'doi': entry['doi'],
+        'keywords': entry['keywords'],
+        'correspondence_address': entry['correspondence_address'],
+        'publisher': entry['publisher']
+    } for entry in entries_from_last_session]
     
-    return dados
+    return data
 
+#################PAPERS PER YEAR###########################################################################################
 
 @anvil.server.callable
 def fetch_data_last_session_by_year():
-    usuario_atual = anvil.users.get_user()
-    ultima_sessao = app_tables.sessions.search(
+    # Retrieves the current user.
+    current_user = anvil.users.get_user()
+    # Finds the last session by sorting the sessions by 'upload_date' in descending order and selects the first one.
+    last_session = app_tables.sessions.search(
         tables.order_by("upload_date", ascending=False),
-        user=usuario_atual
+        user=current_user
     )[0]
 
-    entradas = app_tables.bib_data.search(session=ultima_sessao)
-    papers_por_ano = {}
+    # Searches for entries in the 'bib_data' table associated with the last session.
+    entries = app_tables.bib_data.search(session=last_session)
+    papers_by_year = {}
     
-    for entrada in entradas:
-        ano = entrada['year']
-        if ano in papers_por_ano:
-            papers_por_ano[ano] += 1
+    # Iterates over each entry and counts the number of papers per year.
+    for entry in entries:
+        year = entry['year']
+        if year in papers_by_year:
+            papers_by_year[year] += 1
         else:
-            papers_por_ano[ano] = 1
+            papers_by_year[year] = 1
     
-    # Ordena o dicionário por ano (chave) e converte em uma lista de tuplas
-    papers_ordenados_por_ano = sorted(papers_por_ano.items())
+    # Sorts the dictionary by year (key) and converts it into a list of tuples.
+    sorted_papers_by_year = sorted(papers_by_year.items())
     
-    return papers_ordenados_por_ano
+    return sorted_papers_by_year
+#######TOP JOURNALS###################################
 
 @anvil.server.callable
 def fetch_top_journals_last_session():
-    usuario_atual = anvil.users.get_user()
-    ultima_sessao = app_tables.sessions.search(
+    # Retrieves the current user.
+    current_user = anvil.users.get_user()
+    # Finds the last session by sorting the sessions by 'upload_date' in descending order and selects the first one.
+    last_session = app_tables.sessions.search(
         tables.order_by("upload_date", ascending=False),
-        user=usuario_atual
+        user=current_user
     )[0]
     
-    entradas = app_tables.bib_data.search(session=ultima_sessao)
-    contador_journals = {}
+    # Searches for entries in the 'bib_data' table associated with the last session.
+    entries = app_tables.bib_data.search(session=last_session)
+    journal_counter = {}
     
-    for entrada in entradas:
-        journal = entrada['journal']
+    # Iterates over each entry and counts occurrences of each journal.
+    for entry in entries:
+        journal = entry['journal']
         if journal:
-            contador_journals[journal] = contador_journals.get(journal, 0) + 1
+            journal_counter[journal] = journal_counter.get(journal, 0) + 1
     
-    # Ordena o dicionário por contagem e pega os top 10
-    top_journals = sorted(contador_journals.items(), key=lambda x: x[1], reverse=True)[:10]
+    # Sorts the dictionary by count and retrieves the top 10 journals.
+    top_journals = sorted(journal_counter.items(), key=lambda x: x[1], reverse=True)[:10]
     
     return top_journals
 
+########KEYWORDS EVOLUTION#####################################################################################################
 
 @anvil.server.callable
 def fetch_keywords_by_year():
-    # Busca todas as entradas na tabela bib_data
-    entradas = app_tables.bib_data.search(tables.order_by("year", ascending=True))
+    # Searches for all entries in the 'bib_data' table, ordered by year.
+    entries = app_tables.bib_data.search(tables.order_by("year", ascending=True))
 
-    # Inicializa um contador para todas as palavras-chave
-    contador_keywords = Counter()
+    # Initializes a counter for all keywords.
+    keyword_counter = Counter()
 
-    # Conta a frequência de cada palavra-chave
-    for entrada in entradas:
-        if entrada['keywords']:
-            keywords = entrada['keywords'].split(';')
-            contador_keywords.update([keyword.strip() for keyword in keywords if keyword])
+    # Counts the frequency of each keyword.
+    for entry in entries:
+        if entry['keywords']:
+            keywords = entry['keywords'].split(';')
+            keyword_counter.update([keyword.strip() for keyword in keywords if keyword])
 
-    # Seleciona as top 10 palavras-chave mais frequentes
-    top_keywords = [keyword for keyword, count in contador_keywords.most_common(10)]
+    # Selects the top 10 most frequent keywords.
+    top_keywords = [keyword for keyword, count in keyword_counter.most_common(10)]
 
-    # Inicializa o dicionário de dados para o streamgraph
-    dados_stream = {ano: {kw: 0 for kw in top_keywords} for ano in sorted(set(entrada['year'] for entrada in entradas))}
+    # Initializes the data dictionary for the streamgraph.
+    stream_data = {year: {kw: 0 for kw in top_keywords} for year in sorted(set(entry['year'] for entry in entries))}
 
-    # Conta as palavras-chave apenas se estiverem no top 10
-    for entrada in entradas:
-        ano = entrada['year']
-        if ano and entrada['keywords']:
-            for keyword in entrada['keywords'].split(';'):
+    # Counts the keywords only if they are in the top 10.
+    for entry in entries:
+        year = entry['year']
+        if year and entry['keywords']:
+            for keyword in entry['keywords'].split(';'):
                 keyword = keyword.strip()
                 if keyword in top_keywords:
-                    dados_stream[ano][keyword] += 1
+                    stream_data[year][keyword] += 1
 
-    # Prepara os dados para o streamgraph
-    stream_data = [{'year': ano, **counts} for ano, counts in dados_stream.items()]
+    # Prepares the data for the streamgraph.
+    stream_graph_data = [{'year': year, **counts} for year, counts in stream_data.items()]
 
-    return stream_data
+    return stream_graph_data
