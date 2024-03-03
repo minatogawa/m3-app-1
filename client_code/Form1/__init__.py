@@ -56,69 +56,108 @@ class Form1(Form1Template):
     self.draw_papers_per_year()
     self.draw_top_journals_chart()
     self.draw_keywords_streamgraph()
-   
+
   def fill_data_grid(self):
     try:
-        # Chama a função do servidor para buscar os dados da última sessão
-        dados = anvil.server.call('buscar_dados_da_ultima_sessao')
-        # Atualiza os itens do Data Grid diretamente com os dados
-        self.repeating_panel_1.items = dados
+        # Calls the server function to fetch data from the last session
+        data = anvil.server.call('fetch_data_from_last_session')
+        # Updates the Data Grid items directly with the fetched data
+        self.repeating_panel_1.items = data
     except Exception as e:
-        print(e)  # Isso imprimirá o erro no console de execução
+        print(e)  # This will print the error in the execution console
 
-  def desenhar_grafico_generico(self, dados, layout, plot_component):
-    fig = go.Figure(data=dados, layout=layout)
+
+###########################GRAPHS DRAWING##################################################3
+
+  def plot_graph(self, data, layout, plot_component):
+    # Creates a Figure object using Plotly, with the specified data and layout.
+    # The 'data' parameter contains the data points and styling for the graph.
+    # The 'layout' parameter defines the overall layout properties of the graph, such as titles, axis labels, etc.
+    fig = go.Figure(data=data, layout=layout)
+    
+    # Assigns the data of the figure to the 'data' attribute of the plot component.
+    # This line effectively updates the graph's data points and styling according to the 'fig' object.
     plot_component.data = fig.data
+    
+    # Assigns the layout of the figure to the 'layout' attribute of the plot component.
+    # This line updates the layout properties (e.g., titles, axis labels) of the graph based on the 'fig' object.
     plot_component.layout = fig.layout
 
-  # Exemplo de como usar a função genérica
+
+#######PAPERS PER YEAR###################################
+
+  
   def draw_papers_per_year(self):
-    dados_grafico = anvil.server.call('dados_papers_ultima_sessao_por_ano')
-    anos = [ano for ano, _ in dados_grafico]
-    contagem_papers = [contagem for _, contagem in dados_grafico]
-    data = [go.Bar(x=anos, y=contagem_papers)]
+    # Calls a server function to retrieve data on papers published per year.
+    graph_data = anvil.server.call('fetch_data_last_session_by_year')
+    # Extracts the list of years from the data, which will be used as the X-axis of the graph.
+    years = [year for year, _ in graph_data]
+    # Extracts the paper count per year from the data, which will be used as the Y-axis of the graph.
+    paper_counts = [count for _, count in graph_data]
+    # Creates a bar graph data object with years on the X-axis and paper counts on the Y-axis.
+    data = [go.Bar(x=years, y=paper_counts)]
+    # Defines the layout of the graph, including the title.
     layout = go.Layout(title='Papers published per year')
-    self.desenhar_grafico_generico(data, layout, self.plot_1)
+    # Calls the generic graph plotting function with the data, layout, and specific plot component as arguments.
+    self.plot_graph(data, layout, self.plot_1)
+
+#######TOP JOURNALS###################################
 
   def draw_top_journals_chart(self):
-    top_journals = anvil.server.call('top_journals_ultima_sessao')
+    # Calls a server function to retrieve data on the top journals of the last session.
+    top_journals = anvil.server.call('fetch_top_journals_last_session')
 
-    cores_barras = ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)']
-    cores_barras *= (len(top_journals) // len(cores_barras) + 1)
+    # Defines a list of colors for the bars in the chart.
+    bar_colors = ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)']
+    # Repeats the color list to ensure there are enough colors for all journals.
+    bar_colors *= (len(top_journals) // len(bar_colors) + 1)
 
-    nomes_journals = [journal.replace(' ', '<br>') for journal, _ in top_journals]
-    contagem_papers = [contagem for _, contagem in top_journals]
+    # Prepares the journal names for the X-axis, inserting line breaks for better readability.
+    journal_names = [journal.replace(' ', '<br>') for journal, _ in top_journals]
+    # Extracts the paper counts for each journal to be used as the Y-axis values.
+    paper_counts = [count for _, count in top_journals]
 
-    data = [go.Bar(x=nomes_journals, y=contagem_papers, marker=dict(color=cores_barras[:len(top_journals)]))]
+    # Creates a bar chart data object, assigning colors to each bar from the color list.
+    data = [go.Bar(x=journal_names, y=paper_counts, marker=dict(color=bar_colors[:len(top_journals)]))]
 
+    # Sets up the layout of the chart, including the title and axis labels.
     layout = go.Layout(
-        title='Top 10 Journals com Mais Publicações',
-        xaxis=dict(title='Journal', tickangle=0, tickmode='array', tickvals=list(range(len(nomes_journals))), ticktext=nomes_journals),
-        yaxis=dict(title='Número de Publicações'),
+        title='Top 10 Journals with Most Publications',
+        xaxis=dict(title='Journal', tickangle=0, tickmode='array', tickvals=list(range(len(journal_names))), ticktext=journal_names),
+        yaxis=dict(title='Number of Publications'),
         margin=dict(l=50, r=50, t=50, b=100)
     )
 
-    self.desenhar_grafico_generico(data, layout, self.plot_2)
-
-
+    # Calls the generic graph plotting function to display the chart with the prepared data and layout.
+    self.plot_graph(data, layout, self.plot_2)
+  
+#######KEYWORDS EVOLUTION###################################
+  
   def draw_keywords_streamgraph(self):
-    dados_keywords = anvil.server.call('dados_keywords_por_ano')
+    # Calls a server function to fetch keyword data by year.
+    keyword_data = anvil.server.call('fetch_keywords_by_year')
 
-    years = [dado['year'] for dado in dados_keywords]
-    series = {keyword: [] for keyword in dados_keywords[0].keys() if keyword != 'year'}
+    # Extracts the years from the data to use as the X-axis.
+    years = [data['year'] for data in keyword_data]
+    # Initializes a dictionary to hold keyword series data, excluding 'year'.
+    series = {keyword: [] for keyword in keyword_data[0].keys() if keyword != 'year'}
 
-    for dado in dados_keywords:
-        for keyword, value in dado.items():
+    # Populates the series dictionary with values for each keyword over the years.
+    for data in keyword_data:
+        for keyword, value in data.items():
             if keyword != 'year':
                 series[keyword].append(value)
 
+    # Prepares the data for a streamgraph, specifying the mode and appearance of lines.
     data = [go.Scatter(x=years, y=values, mode='lines', line=dict(shape='spline', smoothing=1.3), stackgroup='one', name=keyword) for keyword, values in series.items()]
 
+    # Sets up the layout of the graph, including the title and axis titles.
     layout = go.Layout(
-        title='Evolução das Palavras-Chave ao Longo dos Anos - Top 10',
-        xaxis_title='Ano',
-        yaxis_title='Frequência',
+        title='Keyword Evolution Over the Years - Top 10',
+        xaxis_title='Year',
+        yaxis_title='Frequency',
         showlegend=True
     )
 
-    self.desenhar_grafico_generico(data, layout, self.plot_3)
+    # Calls the generic graph plotting function to display the streamgraph with the prepared data and layout.
+    self.plot_graph(data, layout, self.plot_3)

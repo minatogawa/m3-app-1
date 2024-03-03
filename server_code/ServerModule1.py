@@ -44,7 +44,7 @@ def process_bibtex_and_store(blob_media):
     return f"Dados processados e armazenados com sucesso para a sessão."
 
 @anvil.server.callable
-def buscar_dados_da_ultima_sessao():
+def fetch_data_from_last_session():
     print("Iniciando a busca de dados da última sessão")
     usuario_atual = anvil.users.get_user()
     
@@ -75,7 +75,7 @@ def buscar_dados_da_ultima_sessao():
 
 
 @anvil.server.callable
-def dados_papers_ultima_sessao_por_ano():
+def fetch_data_last_session_by_year():
     usuario_atual = anvil.users.get_user()
     ultima_sessao = app_tables.sessions.search(
         tables.order_by("upload_date", ascending=False),
@@ -98,7 +98,7 @@ def dados_papers_ultima_sessao_por_ano():
     return papers_ordenados_por_ano
 
 @anvil.server.callable
-def top_journals_ultima_sessao():
+def fetch_top_journals_last_session():
     usuario_atual = anvil.users.get_user()
     ultima_sessao = app_tables.sessions.search(
         tables.order_by("upload_date", ascending=False),
@@ -120,7 +120,7 @@ def top_journals_ultima_sessao():
 
 
 @anvil.server.callable
-def dados_keywords_por_ano():
+def fetch_keywords_by_year():
     # Busca todas as entradas na tabela bib_data
     entradas = app_tables.bib_data.search(tables.order_by("year", ascending=True))
 
