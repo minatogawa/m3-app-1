@@ -59,12 +59,20 @@ class Form1(Form1Template):
 
   def fill_data_grid(self):
     try:
-        # Calls the server function to fetch data from the last session
-        data = anvil.server.call('fetch_data_from_last_session')
-        # Updates the Data Grid items directly with the fetched data
+        # Obtém o usuário atual
+        current_user = anvil.users.get_user()
+        # Caso não haja um usuário, pode-se decidir o que fazer, talvez redirecionar para um form de login
+        if not current_user:
+            anvil.open_form('LoginForm')
+            return
+
+        # Chama a função do servidor para buscar os dados da última sessão
+        data = anvil.server.call('fetch_data_from_last_session', current_user)
+        
+        # Atualiza os itens do RepeatingPanel com os dados buscados
         self.repeating_panel_1.items = data
     except Exception as e:
-        print(e)  # This will print the error in the execution console
+        print(e)
 
 
 ###########################GRAPHS DRAWING##################################################3
@@ -161,3 +169,7 @@ class Form1(Form1Template):
 
     # Calls the generic graph plotting function to display the streamgraph with the prepared data and layout.
     self.plot_graph(data, layout, self.plot_3)
+
+  def button_view_papers_click(self, **event_args):
+    data = anvil.server.call('fetch_data_last_session_by_year')
+    anvil.open_form('PapersPerYearForm', data)

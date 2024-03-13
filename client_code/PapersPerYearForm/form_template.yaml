@@ -1,0 +1,23 @@
+is_package: true
+container:
+  type: HtmlTemplate
+  properties: {html: '@theme:standard-page.html'}
+components:
+- type: ColumnPanel
+  properties: {}
+  name: content_panel
+  layout_properties: {slot: default}
+  components:
+  - name: button_back
+    properties: {text: button_1}
+    type: Button
+    layout_properties: {grid_position: 'ARNYWH,KAZGDS'}
+    event_bindings: {click: button_back_click}
+  - name: plot_1
+    properties: {}
+    type: Plot
+    layout_properties: {grid_position: 'VLGPSA,OGWDTD'}
+- type: FlowPanel
+  properties: {}
+  name: navbar_links
+  layout_properties: {slot: nav-right}
