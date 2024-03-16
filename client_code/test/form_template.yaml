@@ -1,0 +1,8 @@
+container: {type: ColumnPanel}
+components:
+- name: button_1
+  properties: {text: button_1}
+  type: Button
+  layout_properties: {grid_position: 'FEYUEQ,ZJLQAO'}
+  event_bindings: {click: button_1_click}
+is_package: true

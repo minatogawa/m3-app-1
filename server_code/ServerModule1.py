@@ -168,3 +168,16 @@ def fetch_keywords_by_year():
     stream_graph_data = [{'year': year, **counts} for year, counts in stream_data.items()]
 
     return stream_graph_data
+
+@anvil.server.callable
+def check_reload_flag():
+    return anvil.server.session.get('reload_form1', False)
+
+@anvil.server.callable
+def set_reload_flag():
+    anvil.server.session['reload_form1'] = True
+
+@anvil.server.callable
+def clear_reload_flag():
+    if 'reload_form1' in anvil.server.session:
+        del anvil.server.session['reload_form1']
